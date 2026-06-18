@@ -1,0 +1,23 @@
+flowchart TD
+    t(["t in (0, 1)<br/>fundamental parameter"])
+
+    subgraph Path1["t to R (via Lemma 1)"]
+        P["P(t) = Lemma 1 integral<br/>pairwise error probability"]
+        R(["R = -log2(P(t)) / n"])
+        P --> R
+    end
+
+    subgraph Path2["t to eps (via NCT CDF)"]
+        beta["beta = t^2 / (1 - t^2)"]
+        thr["threshold = sqrt(beta times (n-1))"]
+        eps(["eps = NCT_CDF(threshold)<br/>df = n-1, nc = sqrt(n*P)"])
+        beta --> thr --> eps
+    end
+
+    t --> P
+    t --> beta
+
+    classDef input fill:#fff3cd,stroke:#856404,stroke-width:2px
+    classDef output fill:#d4edda,stroke:#155724,stroke-width:2px
+    class t input
+    class R,eps output

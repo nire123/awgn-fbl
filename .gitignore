@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.claude/
+.vscode/
+.idea/
+*.egg-info/
+.DS_Store
+*.aux
+*.log
+*.out

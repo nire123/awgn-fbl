@@ -1,0 +1,10 @@
+# Runtime dependencies for awgn_fbl.
+# For an editable install that also wires up the package, prefer:
+#     pip install -e .
+# (this file is provided for environments that pin deps separately)
+numpy>=1.22
+scipy>=1.8
+matplotlib>=3.5
+
+# Tests
+pytest>=7.0

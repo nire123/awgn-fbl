@@ -1,0 +1,121 @@
+curve,epsilon,n,snr_db,rate_bits
+Shannon capacity,0.001,500,-4,0.241737
+Shannon capacity,0.001,500,-3.36842,0.273194
+Shannon capacity,0.001,500,-2.73684,0.307941
+Shannon capacity,0.001,500,-2.10526,0.346146
+Shannon capacity,0.001,500,-1.47368,0.387946
+Shannon capacity,0.001,500,-0.842105,0.43345
+Shannon capacity,0.001,500,-0.210526,0.482728
+Shannon capacity,0.001,500,0.421053,0.535815
+Shannon capacity,0.001,500,1.05263,0.592703
+Shannon capacity,0.001,500,1.68421,0.653347
+Shannon capacity,0.001,500,2.31579,0.717662
+Shannon capacity,0.001,500,2.94737,0.78553
+Shannon capacity,0.001,500,3.57895,0.856802
+Shannon capacity,0.001,500,4.21053,0.931305
+Shannon capacity,0.001,500,4.84211,1.00885
+Shannon capacity,0.001,500,5.47368,1.08923
+Shannon capacity,0.001,500,6.10526,1.17224
+Shannon capacity,0.001,500,6.73684,1.25765
+Shannon capacity,0.001,500,7.36842,1.34528
+Shannon capacity,0.001,500,8,1.43489
+NCT converse (ours),0.001,500,-4,0.161615
+NCT converse (ours),0.001,500,-3.36842,0.188637
+NCT converse (ours),0.001,500,-2.73684,0.219073
+NCT converse (ours),0.001,500,-2.10526,0.253133
+NCT converse (ours),0.001,500,-1.47368,0.290998
+NCT converse (ours),0.001,500,-0.842105,0.33281
+NCT converse (ours),0.001,500,-0.210526,0.378672
+NCT converse (ours),0.001,500,0.421053,0.428636
+NCT converse (ours),0.001,500,1.05263,0.482708
+NCT converse (ours),0.001,500,1.68421,0.540843
+NCT converse (ours),0.001,500,2.31579,0.602951
+NCT converse (ours),0.001,500,2.94737,0.6689
+NCT converse (ours),0.001,500,3.57895,0.73852
+NCT converse (ours),0.001,500,4.21053,0.811615
+NCT converse (ours),0.001,500,4.84211,0.887967
+NCT converse (ours),0.001,500,5.47368,0.967344
+NCT converse (ours),0.001,500,6.10526,1.04951
+NCT converse (ours),0.001,500,6.73684,1.13422
+NCT converse (ours),0.001,500,7.36842,1.22125
+NCT converse (ours),0.001,500,8,1.31036
+RCU+ achievable (ours),0.001,500,-4,0.158144
+RCU+ achievable (ours),0.001,500,-3.36842,0.185205
+RCU+ achievable (ours),0.001,500,-2.73684,0.215674
+RCU+ achievable (ours),0.001,500,-2.10526,0.249762
+RCU+ achievable (ours),0.001,500,-1.47368,0.287651
+RCU+ achievable (ours),0.001,500,-0.842105,0.329484
+RCU+ achievable (ours),0.001,500,-0.210526,0.375363
+RCU+ achievable (ours),0.001,500,0.421053,0.425342
+RCU+ achievable (ours),0.001,500,1.05263,0.479427
+RCU+ achievable (ours),0.001,500,1.68421,0.537573
+RCU+ achievable (ours),0.001,500,2.31579,0.59969
+RCU+ achievable (ours),0.001,500,2.94737,0.665645
+RCU+ achievable (ours),0.001,500,3.57895,0.735272
+RCU+ achievable (ours),0.001,500,4.21053,0.808372
+RCU+ achievable (ours),0.001,500,4.84211,0.884728
+RCU+ achievable (ours),0.001,500,5.47368,0.964108
+RCU+ achievable (ours),0.001,500,6.10526,1.04627
+RCU+ achievable (ours),0.001,500,6.73684,1.13099
+RCU+ achievable (ours),0.001,500,7.36842,1.21802
+RCU+ achievable (ours),0.001,500,8,1.30714
+Gallager achievable (avg err),0.001,500,-4,0.119305
+Gallager achievable (avg err),0.001,500,-3.36842,0.143383
+Gallager achievable (avg err),0.001,500,-2.73684,0.170905
+Gallager achievable (avg err),0.001,500,-2.10526,0.202102
+Gallager achievable (avg err),0.001,500,-1.47368,0.237186
+Gallager achievable (avg err),0.001,500,-0.842105,0.276356
+Gallager achievable (avg err),0.001,500,-0.210526,0.319707
+Gallager achievable (avg err),0.001,500,0.421053,0.367326
+Gallager achievable (avg err),0.001,500,1.05263,0.419277
+Gallager achievable (avg err),0.001,500,1.68421,0.475455
+Gallager achievable (avg err),0.001,500,2.31579,0.535837
+Gallager achievable (avg err),0.001,500,2.94737,0.60027
+Gallager achievable (avg err),0.001,500,3.57895,0.66854
+Gallager achievable (avg err),0.001,500,4.21053,0.740542
+Gallager achievable (avg err),0.001,500,4.84211,0.815934
+Gallager achievable (avg err),0.001,500,5.47368,0.894506
+Gallager achievable (avg err),0.001,500,6.10526,0.975981
+Gallager achievable (avg err),0.001,500,6.73684,1.06015
+Gallager achievable (avg err),0.001,500,7.36842,1.14682
+Gallager achievable (avg err),0.001,500,8,1.23556
+$\kappa\beta$ achievable v2 (max err),0.001,500,-4,0.136447
+$\kappa\beta$ achievable v2 (max err),0.001,500,-3.36842,0.163346
+$\kappa\beta$ achievable v2 (max err),0.001,500,-2.73684,0.193661
+$\kappa\beta$ achievable v2 (max err),0.001,500,-2.10526,0.227584
+$\kappa\beta$ achievable v2 (max err),0.001,500,-1.47368,0.265303
+$\kappa\beta$ achievable v2 (max err),0.001,500,-0.842105,0.306961
+$\kappa\beta$ achievable v2 (max err),0.001,500,-0.210526,0.352652
+$\kappa\beta$ achievable v2 (max err),0.001,500,0.421053,0.402432
+$\kappa\beta$ achievable v2 (max err),0.001,500,1.05263,0.456316
+$\kappa\beta$ achievable v2 (max err),0.001,500,1.68421,0.514257
+$\kappa\beta$ achievable v2 (max err),0.001,500,2.31579,0.576166
+$\kappa\beta$ achievable v2 (max err),0.001,500,2.94737,0.641914
+$\kappa\beta$ achievable v2 (max err),0.001,500,3.57895,0.711337
+$\kappa\beta$ achievable v2 (max err),0.001,500,4.21053,0.784242
+$\kappa\beta$ achievable v2 (max err),0.001,500,4.84211,0.860413
+$\kappa\beta$ achievable v2 (max err),0.001,500,5.47368,0.939622
+$\kappa\beta$ achievable v2 (max err),0.001,500,6.10526,1.02163
+$\kappa\beta$ achievable v2 (max err),0.001,500,6.73684,1.1062
+$\kappa\beta$ achievable v2 (max err),0.001,500,7.36842,1.16844
+$\kappa\beta$ achievable v2 (max err),0.001,500,8,1.25744
+Normal approximation,0.001,500,-4,0.152175
+Normal approximation,0.001,500,-3.36842,0.179412
+Normal approximation,0.001,500,-2.73684,0.210076
+Normal approximation,0.001,500,-2.10526,0.244371
+Normal approximation,0.001,500,-1.47368,0.282471
+Normal approximation,0.001,500,-0.842105,0.324516
+Normal approximation,0.001,500,-0.210526,0.370602
+Normal approximation,0.001,500,0.421053,0.420777
+Normal approximation,0.001,500,1.05263,0.475046
+Normal approximation,0.001,500,1.68421,0.533363
+Normal approximation,0.001,500,2.31579,0.595637
+Normal approximation,0.001,500,2.94737,0.661737
+Normal approximation,0.001,500,3.57895,0.731498
+Normal approximation,0.001,500,4.21053,0.804723
+Normal approximation,0.001,500,4.84211,0.881199
+Normal approximation,0.001,500,5.47368,0.960696
+Normal approximation,0.001,500,6.10526,1.04298
+Normal approximation,0.001,500,6.73684,1.12781
+Normal approximation,0.001,500,7.36842,1.21496
+Normal approximation,0.001,500,8,1.3042

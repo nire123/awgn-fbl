@@ -1,0 +1,65 @@
+curve,epsilon,snr_db,n,rate_bits
+Shannon capacity,0.001,3,500,0.791341
+Shannon capacity,0.001,3,688,0.791341
+Shannon capacity,0.001,3,875,0.791341
+Shannon capacity,0.001,3,1062,0.791341
+Shannon capacity,0.001,3,1250,0.791341
+Shannon capacity,0.001,3,1438,0.791341
+Shannon capacity,0.001,3,1625,0.791341
+Shannon capacity,0.001,3,1812,0.791341
+Shannon capacity,0.001,3,2000,0.791341
+Shannon capacity,0.001,3,2188,0.791341
+Shannon capacity,0.001,3,2375,0.791341
+Shannon capacity,0.001,3,2562,0.791341
+Shannon capacity,0.001,3,2750,0.791341
+Shannon capacity,0.001,3,2938,0.791341
+Shannon capacity,0.001,3,3125,0.791341
+Shannon capacity,0.001,3,3312,0.791341
+Shannon capacity,0.001,3,3500,0.791341
+Shannon capacity,0.001,3,3688,0.791341
+Shannon capacity,0.001,3,3875,0.791341
+Shannon capacity,0.001,3,4062,0.791341
+Shannon capacity,0.001,3,4250,0.791341
+Shannon capacity,0.001,3,4438,0.791341
+Shannon capacity,0.001,3,4625,0.791341
+Shannon capacity,0.001,3,4812,0.791341
+Shannon capacity,0.001,3,5000,0.791341
+NCT converse (ours),0.001,3,500,0.674564
+NCT converse (ours),0.001,3,688,0.690121
+NCT converse (ours),0.001,3,875,0.700584
+NCT converse (ours),0.001,3,1062,0.708287
+NCT converse (ours),0.001,3,1250,0.714299
+NCT converse (ours),0.001,3,1438,0.719143
+$\chi^2$ converse (Polyanskiy),0.001,3,500,0.675553
+$\chi^2$ converse (Polyanskiy),0.001,3,688,0.690846
+RCU+ achievable (ours),0.001,3,500,0.67131
+RCU+ achievable (ours),0.001,3,688,0.687802
+RCU+ achievable (ours),0.001,3,875,0.698784
+RCU+ achievable (ours),0.001,3,1062,0.706817
+RCU+ achievable (ours),0.001,3,1250,0.713059
+RCU+ achievable (ours),0.001,3,1438,0.718071
+Normal approximation,0.001,3,500,0.667414
+Normal approximation,0.001,3,688,0.684901
+Normal approximation,0.001,3,875,0.696468
+Normal approximation,0.001,3,1062,0.704888
+Normal approximation,0.001,3,1250,0.711407
+Normal approximation,0.001,3,1438,0.716626
+Normal approximation,0.001,3,1625,0.720907
+Normal approximation,0.001,3,1812,0.724519
+Normal approximation,0.001,3,2000,0.727636
+Normal approximation,0.001,3,2188,0.730349
+Normal approximation,0.001,3,2375,0.732726
+Normal approximation,0.001,3,2562,0.734843
+Normal approximation,0.001,3,2750,0.736753
+Normal approximation,0.001,3,2938,0.738479
+Normal approximation,0.001,3,3125,0.740041
+Normal approximation,0.001,3,3312,0.741472
+Normal approximation,0.001,3,3500,0.742794
+Normal approximation,0.001,3,3688,0.744016
+Normal approximation,0.001,3,3875,0.745143
+Normal approximation,0.001,3,4062,0.746192
+Normal approximation,0.001,3,4250,0.747177
+Normal approximation,0.001,3,4438,0.7481
+Normal approximation,0.001,3,4625,0.748962
+Normal approximation,0.001,3,4812,0.749775
+Normal approximation,0.001,3,5000,0.750545

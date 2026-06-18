@@ -1,0 +1,39 @@
+graph TD
+    subgraph Foundation
+        awgn["awgn_converse.py<br/>NCT · χ² · SolidAngle"]
+    end
+
+    subgraph RCUPipeline["RCU+ pipeline"]
+        fast["fast_F_evaluator.py<br/>PCHIP interp"]
+        rcu["rcu_achievable.py<br/>∫ F(γ) e^(logM-γ) dγ"]
+    end
+
+    subgraph Standalone["Standalone achievability / approximation"]
+        kb1["kappabeta_achievable.py<br/>v1"]
+        kb2["kappabeta_achievable_v2.py<br/>v2 PPV-faithful"]
+        gal["gallager_achievable.py"]
+        na["normal_approximation.py"]
+    end
+
+    subgraph Presentation
+        plot["plot_bounds.py<br/>4 plot types"]
+        gen["generate_plots.py"]
+    end
+
+    awgn --> fast
+    fast --> rcu
+
+    awgn --> plot
+    rcu --> plot
+    kb1 --> plot
+    kb2 --> plot
+    gal --> plot
+    na --> plot
+    plot --> gen
+
+    classDef ours fill:#d4edda,stroke:#155724,stroke-width:2px
+    classDef port fill:#fff3cd,stroke:#856404
+    classDef infra fill:#e2e3e5,stroke:#383d41
+    class awgn,fast,rcu ours
+    class kb1,kb2,gal,na port
+    class plot,gen infra

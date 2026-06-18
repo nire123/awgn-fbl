@@ -1,0 +1,53 @@
+% Self-contained preamble for the AWGN finite-blocklength chapter.
+% Provides the macros referenced by chapter_awgn.tex without depending
+% on the parent thesis's common_def.tex.
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb, amsthm, graphicx, hyperref, mathtools}
+\usepackage{booktabs}
+\usepackage{xcolor}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+
+% Bracketing helpers (from the thesis common_def)
+\newcommand{\BRA}[1]{\left( #1 \right)}
+\newcommand{\BRAi}[1]{\langle #1 \rangle}
+\newcommand{\BRAs}[1]{\left\{ #1 \right \}}
+
+% Probability / expectation
+\newcommand{\PR}[1]{\mathbb{P}\left\{ #1 \right\}}
+\newcommand{\Es}[2]{\mathbb{E}_{#1} \left[ #2 \right]}
+\newcommand{\Pe}{P_{\mathrm{e}}}
+
+% Bold vectors
+\newcommand{\bX}{\textbf{X}}
+\newcommand{\bY}{\textbf{Y}}
+\newcommand{\bZ}{\textbf{Z}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\by}{\mathbf{y}}
+
+% Calligraphic
+\newcommand{\cN}{\mathcal{N}}
+
+% Verdú with diacritic
+\newcommand{\verdu}{Verd\'{u}}
+
+% Norm
+\newcommand{\norm}[1]{\left\Vert #1 \right\Vert}
+
+% Misc
+\newcommand{\ie}{i.e.}
+
+% Cross-chapter refs (this chapter is standalone) — turn into placeholder text.
+\providecommand{\cite}[1]{\textbf{[#1]}}
+\makeatletter
+\let\@oldref\ref
+\renewcommand{\ref}[1]{\@ifundefined{r@#1}{\textcolor{red}{\textbf{[ref:#1]}}}{\@oldref{#1}}}
+\makeatother

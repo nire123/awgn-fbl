@@ -1,0 +1,81 @@
+curve,n,rate_bits,epsilon,snr_db
+NCT converse (ours),100,0.4,1e-08,3.25762
+NCT converse (ours),100,0.4,2.48163e-08,3.1457
+NCT converse (ours),100,0.4,6.15848e-08,3.02902
+NCT converse (ours),100,0.4,1.52831e-07,2.90724
+NCT converse (ours),100,0.4,3.79269e-07,2.77983
+NCT converse (ours),100,0.4,9.41205e-07,2.64616
+NCT converse (ours),100,0.4,2.33572e-06,2.5055
+NCT converse (ours),100,0.4,5.79639e-06,2.35698
+NCT converse (ours),100,0.4,1.43845e-05,2.19951
+NCT converse (ours),100,0.4,3.5697e-05,2.03178
+NCT converse (ours),100,0.4,8.85867e-05,1.85211
+NCT converse (ours),100,0.4,0.000219839,1.65863
+NCT converse (ours),100,0.4,0.000545559,1.44781
+NCT converse (ours),100,0.4,0.00135388,1.21685
+NCT converse (ours),100,0.4,0.00335982,0.959999
+NCT converse (ours),100,0.4,0.00833782,0.669464
+NCT converse (ours),100,0.4,0.0206914,0.332921
+NCT converse (ours),100,0.4,0.0513483,-0.071057
+NCT converse (ours),100,0.4,0.127427,-0.58537
+NCT converse (ours),100,0.4,0.316228,-1.32464
+RCU+ achievable (ours),100,0.4,1e-08,3.63512
+RCU+ achievable (ours),100,0.4,2.48163e-08,3.5064
+RCU+ achievable (ours),100,0.4,6.15848e-08,3.37396
+RCU+ achievable (ours),100,0.4,1.52831e-07,3.2374
+RCU+ achievable (ours),100,0.4,3.79269e-07,3.09619
+RCU+ achievable (ours),100,0.4,9.41205e-07,2.94948
+RCU+ achievable (ours),100,0.4,2.33572e-06,2.79695
+RCU+ achievable (ours),100,0.4,5.79639e-06,2.63746
+RCU+ achievable (ours),100,0.4,1.43845e-05,2.46991
+RCU+ achievable (ours),100,0.4,3.5697e-05,2.29292
+RCU+ achievable (ours),100,0.4,8.85867e-05,2.1048
+RCU+ achievable (ours),100,0.4,0.000219839,1.90328
+RCU+ achievable (ours),100,0.4,0.000545559,1.68581
+RCU+ achievable (ours),100,0.4,0.00135388,1.44837
+RCU+ achievable (ours),100,0.4,0.00335982,1.18572
+RCU+ achievable (ours),100,0.4,0.00833782,0.890073
+RCU+ achievable (ours),100,0.4,0.0206914,0.549134
+RCU+ achievable (ours),100,0.4,0.0513483,0.141601
+RCU+ achievable (ours),100,0.4,0.127427,-0.375407
+RCU+ achievable (ours),100,0.4,0.316228,-1.11451
+Gallager achievable (avg err),100,0.4,1e-08,4.50751
+Gallager achievable (avg err),100,0.4,2.48163e-08,4.39015
+Gallager achievable (avg err),100,0.4,6.15848e-08,4.27071
+Gallager achievable (avg err),100,0.4,1.52831e-07,4.1505
+Gallager achievable (avg err),100,0.4,3.79269e-07,4.02867
+Gallager achievable (avg err),100,0.4,9.41205e-07,3.90511
+Gallager achievable (avg err),100,0.4,2.33572e-06,3.78035
+Gallager achievable (avg err),100,0.4,5.79639e-06,3.6541
+Gallager achievable (avg err),100,0.4,1.43845e-05,3.52545
+Gallager achievable (avg err),100,0.4,3.5697e-05,3.39538
+Gallager achievable (avg err),100,0.4,8.85867e-05,3.26354
+Gallager achievable (avg err),100,0.4,0.000219839,3.12832
+Gallager achievable (avg err),100,0.4,0.000545559,2.98459
+Gallager achievable (avg err),100,0.4,0.00135388,2.83132
+Gallager achievable (avg err),100,0.4,0.00335982,2.66683
+Gallager achievable (avg err),100,0.4,0.00833782,2.48939
+Gallager achievable (avg err),100,0.4,0.0206914,2.2957
+Gallager achievable (avg err),100,0.4,0.0513483,2.08194
+Gallager achievable (avg err),100,0.4,0.127427,1.8419
+Gallager achievable (avg err),100,0.4,0.316228,1.56465
+Normal approximation,100,0.4,1e-08,4.08503
+Normal approximation,100,0.4,2.48163e-08,3.9447
+Normal approximation,100,0.4,6.15848e-08,3.79912
+Normal approximation,100,0.4,1.52831e-07,3.64781
+Normal approximation,100,0.4,3.79269e-07,3.49016
+Normal approximation,100,0.4,9.41205e-07,3.32551
+Normal approximation,100,0.4,2.33572e-06,3.15304
+Normal approximation,100,0.4,5.79639e-06,2.9718
+Normal approximation,100,0.4,1.43845e-05,2.78062
+Normal approximation,100,0.4,3.5697e-05,2.57808
+Normal approximation,100,0.4,8.85867e-05,2.3624
+Normal approximation,100,0.4,0.000219839,2.13134
+Normal approximation,100,0.4,0.000545559,1.88194
+Normal approximation,100,0.4,0.00135388,1.61029
+Normal approximation,100,0.4,0.00335982,1.3109
+Normal approximation,100,0.4,0.00833782,0.975792
+Normal approximation,100,0.4,0.0206914,0.592549
+Normal approximation,100,0.4,0.0513483,0.140003
+Normal approximation,100,0.4,0.127427,-0.423482
+Normal approximation,100,0.4,0.316228,-1.20409

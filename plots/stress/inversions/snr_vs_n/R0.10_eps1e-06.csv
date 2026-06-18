@@ -1,0 +1,44 @@
+curve,epsilon,rate_bits,n,snr_db
+NCT converse (ours),1e-06,0.1,153,-2.70356
+RCU+ achievable (ours),1e-06,0.1,50,1.55502
+RCU+ achievable (ours),1e-06,0.1,153,-2.14903
+Gallager achievable (avg err),1e-06,0.1,50,3.29326
+Gallager achievable (avg err),1e-06,0.1,153,-1.00095
+Gallager achievable (avg err),1e-06,0.1,255,-2.34133
+Gallager achievable (avg err),1e-06,0.1,358,-3.05055
+Gallager achievable (avg err),1e-06,0.1,461,-3.52944
+Gallager achievable (avg err),1e-06,0.1,563,-3.8837
+Gallager achievable (avg err),1e-06,0.1,666,-4.16606
+Gallager achievable (avg err),1e-06,0.1,768,-4.39401
+Gallager achievable (avg err),1e-06,0.1,871,-4.58671
+Gallager achievable (avg err),1e-06,0.1,974,-4.75127
+Gallager achievable (avg err),1e-06,0.1,1076,-4.89327
+Gallager achievable (avg err),1e-06,0.1,1179,-5.01941
+Gallager achievable (avg err),1e-06,0.1,1282,-5.13137
+Gallager achievable (avg err),1e-06,0.1,1384,-5.23084
+Gallager achievable (avg err),1e-06,0.1,1487,-5.32174
+Gallager achievable (avg err),1e-06,0.1,1589,-5.4041
+Gallager achievable (avg err),1e-06,0.1,1692,-5.4797
+Gallager achievable (avg err),1e-06,0.1,1795,-5.54971
+Gallager achievable (avg err),1e-06,0.1,1897,-5.61371
+Gallager achievable (avg err),1e-06,0.1,2000,-5.67369
+Normal approximation,1e-06,0.1,50,1.89334
+Normal approximation,1e-06,0.1,153,-1.35207
+Normal approximation,1e-06,0.1,255,-2.59178
+Normal approximation,1e-06,0.1,358,-3.32548
+Normal approximation,1e-06,0.1,461,-3.82508
+Normal approximation,1e-06,0.1,563,-4.19151
+Normal approximation,1e-06,0.1,666,-4.48012
+Normal approximation,1e-06,0.1,768,-4.71135
+Normal approximation,1e-06,0.1,871,-4.90592
+Normal approximation,1e-06,0.1,974,-5.07093
+Normal approximation,1e-06,0.1,1076,-5.21198
+Normal approximation,1e-06,0.1,1179,-5.33663
+Normal approximation,1e-06,0.1,1282,-5.44687
+Normal approximation,1e-06,0.1,1384,-5.5444
+Normal approximation,1e-06,0.1,1487,-5.6331
+Normal approximation,1e-06,0.1,1589,-5.71276
+Normal approximation,1e-06,0.1,1692,-5.78616
+Normal approximation,1e-06,0.1,1795,-5.85333
+Normal approximation,1e-06,0.1,1897,-5.91469
+Normal approximation,1e-06,0.1,2000,-5.97256

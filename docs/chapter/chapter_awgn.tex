@@ -1,0 +1,386 @@
+\chapter{Finite-Blocklength Bounds for the AWGN Channel}
+\label{ch:awgn2}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+\label{sec:awgn2-intro}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+This chapter instantiates the finite-blocklength machinery of Part~\ref{part:I} on the real-valued additive white Gaussian noise (AWGN) channel
+\begin{equation}\label{eq:awgn2-model}
+	Y_i = X_i + Z_i, \qquad Z_i \sim \cN(0, 1), \qquad i = 1, \ldots, n,
+\end{equation}
+with average power constraint $\frac{1}{n}\sum_{i=1}^n X_i^2 \le P$, so that $\mathrm{SNR} = P$ and $C = \frac{1}{2}\log_2(1 + \mathrm{SNR})$ is the Shannon capacity.  Throughout the chapter the input distribution $Q_X$ is the uniform measure on the power shell $\BRAs{\bx \in \mathbb{R}^n : \norm{\bx}^2 = nP}$, the standard symmetric ensemble for the AWGN channel.
+
+The chapter centres on a single unifying observation that recurs throughout the thesis: \emph{a tight converse and a tight achievability bound can be expressed as two sides of the \emph{exact} evaluation of the same pairwise error probability}.  This reduction is enabled by the rotational symmetry of the AWGN channel under the power-shell ensemble, which collapses the pairwise error probability to a function of a one-dimensional statistic, the angular correlation $\hat\rho$.  Once this quantity is evaluated exactly, no \emph{additional} bounding of the same quantity is required in either direction: the converse uses it as-is, and the achievability uses it modulo a single envelope step (the Bernoulli inequality $1 - (1-x)^k \le \min\BRAs{1, kx}$) whose looseness we measure explicitly in Section~\ref{sec:awgn2-exact-rc}.
+
+\paragraph{Bridge to the thesis-wide framework.}
+The general framework of Part~\ref{part:I} characterises performance through the cumulative distribution function $F(Q_X; z) = \PR{-\log p_e(\bX, \bY) \le z}$ of the (negative log) randomised pairwise error probability under the input distribution $Q_X$ \cite{TODO:thesis-eq-FQXz}.  For the AWGN channel under uniform-on-shell input, the pairwise error probability $p_e(\bx, \by)$ depends on $(\bx, \by)$ only through the angular correlation $\hat\rho = \BRAi{\bx, \by}/(\norm{\bx}\norm{\by})$, and the chapter's function $F(R)$ is precisely $F(Q_X; nR\ln 2)$ with $z$ measured in nats per blocklength.  In other words, this chapter computes a concrete, AWGN-specific instantiation of the abstract informational quantity introduced in Chapter~\ref{ch:point_to_point}.
+
+\paragraph{Contributions of this chapter.}
+\begin{itemize}
+	\item An exact evaluation of the optimal meta-converse for AWGN with sphere-shell input, expressed through the pairwise error probability in two complementary closed forms: Shannon's integral~\cite{shannon1959probability} and a non-central $t$-distribution form (Section~\ref{sec:awgn2-foundation}).
+	\item A matching $\mathrm{RCU}^+$ achievability bound that re-uses the same function (Section~\ref{sec:awgn2-rcu}), so that the converse and the achievability differ only by the Bernoulli envelope of Section~\ref{sec:awgn2-exact-rc}.
+	\item A quantitative separation of two distinct gaps:
+	\begin{itemize}
+		\item the \emph{fundamental} converse--achievability gap, $\Theta(1/\sqrt{n})$, set by the channel dispersion;
+		\item the \emph{relaxation} cost of Polyanskiy--Poor--\verdu's specific $Q_Y$ choice~\cite{polyanskiy2010channel}, $O(1/n)$, a strictly second-order effect.
+	\end{itemize}
+	\item Numerical evidence that at $n = 200$, $\mathrm{SNR} = 0$~dB, $\varepsilon = 10^{-3}$ the fundamental limit is resolved to within $0.009$ bits/use, and to within $0.002$ at $n = 1000$ (Section~\ref{sec:awgn2-results}).
+\end{itemize}
+
+The Polyanskiy--Poor--\verdu meta-converse~\cite{polyanskiy2010channel} fixes the auxiliary output distribution to $Q_{Y^n} = \cN(0, (1+P) I)$, an output marginal under i.i.d.\ Gaussian input.  This choice is computationally convenient but suboptimal: the resulting bound is numerically looser than the optimal meta-converse at every finite blocklength, by a margin that decays as $O(1/n)$ (Section~\ref{sec:awgn2-meta}).  In that sense the chapter offers a tightness--tractability trade-off: at the cost of evaluating Lemma~\ref{lemma:pairwise_continuous_v2} numerically (a one-dimensional integral, which we treat in log domain for stability), one obtains an exact evaluation of the underlying quantity rather than a closed-form relaxation.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The Pairwise Error Probability: Two Equivalent Closed Forms}
+\label{sec:awgn2-foundation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Throughout this chapter, the fundamental geometric quantity is the probability that a spherically-symmetric random vector $\bX$ has an empirical correlation with a fixed vector $\by$ above a given threshold.  We state it as a lemma and give two closed-form evaluations --- one as an integral over a half period of a simple trigonometric integrand, and one through the CDF of the non-central $t$-distribution.  Shannon~\cite{shannon1959probability} used the first form directly via solid-angle geometry; the second we will find convenient for the numerical pipeline since it admits a log-domain treatment that remains stable at arbitrarily large $n$.
+
+\subsection{The pairwise error integral (Lemma~\ref{lemma:pairwise_continuous_v2})}
+
+\begin{lemma}\label{lemma:pairwise_continuous_v2}
+	For any fixed $\by\in \mathbb{R}^n$ and a R.V $\bX\in \mathbb{R}^n$ with spherical symmetry, let $\hat\rho \equiv \frac{\bX^T \by}{\norm{\bX} \norm{\by}}$ be the (R.V) empirical correlation factor. Then for $t\in(0,1)$:
+	\begin{align*}
+		\PR{\hat\rho \geq t}  &=\frac{1}{\pi} \BRA{1-t^2}^{(n-1)/2} \int_{0}^{\frac \pi 2} \BRA{1+t^2\tan^2 \theta}^{(1-n)/2} d \theta \\
+		&=\frac{1}{\pi} \BRA{1-t^2}^{(n-1)/2} \int_{0}^{\infty}\BRA{1\over 1+x^2 } \BRA{1+t^2 x^2 }^{(1-n)/2} dx.
+	\end{align*}
+\end{lemma}
+
+\begin{remark}
+	One can show that the integral term $\int_{0}^{\frac \pi 2} \BRA{1+t^2\tan^2 \theta}^{(1-n)/2} d \theta =\Theta\BRA{1/\sqrt{n}}$, so that numerical evaluation of the integral is straightforward and well-conditioned.
+\end{remark}
+
+\subsection{Proof of Lemma~\ref{lemma:pairwise_continuous_v2}}\label{appendix:pairwise_continuous_v2}
+
+The proof follows the steps of \cite[Lemma 4]{lomnitz2011communication}.  When evaluating the expectation with respect to the $Q$ function we use Craig's formula \cite{craig1991new}.
+
+Note that for any R.V $\bX$ with spherical symmetry, $\bX/\norm{\bX}$ is uniform over the unit sphere.  Thus, we can assume that $\bX \sim \cN^n(0,1)$.  Since we normalize $\by$ by $\norm{\by}$ we can take $\norm{\by}=1$.  Furthermore, applying an orthonormal transformation, we can take $\by=\BRA{1,0,\dots,0}$.  Then
+\begin{align*}
+	\PR{\hat\rho \geq t}  &= \PR{ \frac{X_1}{\norm{\bX}} \geq t}\\
+	&=\frac12\cdot\PR { X_1^2 \geq t^2 (\norm{\bX_2^n}^2 + X_1^2) } \\
+	&=\frac12\cdot\PR { X_1^2 \geq \frac{t^2}{1-t^2} \norm{\bX_2^n}^2  }\\
+	&=\frac12\cdot\Es{\bX_2^n} { \PR { X_1^2 \geq \frac{t^2}{1-t^2} \norm{\bX_2^n}^2 } }\\
+	&=\frac12\cdot\Es{\bX_2^n} { 2 Q \BRA{ \sqrt {\frac{t^2}{1-t^2} \norm{\bX_2^n}^2  } } } \\
+	&=\Es{\bX_2^n} { Q \BRA{ \sqrt {\frac{t^2}{1-t^2} \norm{\bX_2^n}^2  } } }.
+\end{align*}
+Craig's formula \cite{craig1991new} reads
+\begin{equation*}
+	Q(x) = \frac{1}{\pi}\int_{0}^{\frac \pi 2} \exp \BRA{-\frac{x^2}{2\sin^2 \theta}}\,d \theta,
+\end{equation*}
+so we have
+\begin{align*}
+	\PR{\hat\rho \geq t}  &=\Es{\bX_2^n} { \frac{1}{\pi}\int_{0}^{\frac \pi 2} \exp \BRA{-\frac{{\frac{t^2}{1-t^2} \norm{\bX_2^n}^2  }}{2\sin^2 \theta}}d \theta  } \\
+	&=\frac{1}{\pi} \int_{0}^{\frac \pi 2} \Es{\bX_2^n} { \exp \BRA{-\frac{ \frac{t^2}{1-t^2} \norm{\bX_2^n}^2  } {2\sin^2 \theta}}  } d \theta.
+\end{align*}
+Note that for $c > 0$
+\begin{align*}
+	\Es{\bX_2^n} { \exp \BRA{-\frac12\cdot c\norm{\bX_2^n}^2  }  } &=\int_{\mathbb{R}^{n-1}} \exp \BRA{-\frac12\cdot c\norm{\bx_2^n}^2  } \frac{1}{(2 \pi)^{(n-1)/2}} \exp\BRA{- \frac12 \norm{\bx_2^n}^2} d \bx_2^n \\
+	&=\int_{\mathbb{R}^{n-1}} \exp \BRA{-\frac12\cdot (c+1)\norm{\bx_2^n}^2  } \frac{1}{(2 \pi)^{(n-1)/2}} d \bx_2^n \\
+	&=\BRA{1 \over c+1}^{(n-1)/2}.
+\end{align*}
+Using
+\begin{equation*}
+	\frac{ \frac{t^2}{1-t^2}  } {\sin^2 \theta} +1
+	=\frac{1}{\sin^2 \theta} \cdot \frac{ t^2+(1-t^2)\sin^2 \theta }{1-t^2}
+	=\frac{1}{\sin^2 \theta} \cdot \frac{ t^2\cos^2 \theta+\sin^2 \theta }{1-t^2}
+	=\frac{1 + t^2\cot^2 \theta}{1-t^2},
+\end{equation*}
+we get
+\begin{align*}
+	\PR{\hat\rho \geq t}
+	&=\frac{1}{\pi} \int_{0}^{\frac \pi 2} \BRA{\frac{1-t^2}{1+t^2\cot^2 \theta}}^{(n-1)/2} d \theta \\
+	&=\frac{1}{\pi} \BRA{1-t^2}^{(n-1)/2} \int_{0}^{\frac \pi 2} \BRA{1+t^2\cot^2 \theta}^{(1-n)/2} d \theta \\
+	&=\frac{1}{\pi} \BRA{1-t^2}^{(n-1)/2} \int_{0}^{\frac \pi 2} \BRA{1+t^2\tan^2 \theta}^{(1-n)/2} d \theta \\
+	&=\frac{1}{\pi} \BRA{1-t^2}^{(n-1)/2} \int_{0}^{\infty}\BRA{1\over 1+x^2 } \BRA{1+t^2 x^2 }^{(1-n)/2} dx,
+\end{align*}
+where the last line uses the substitution $x = \tan\theta$.  \qed
+
+\subsection{CDF through the non-central $t$-distribution}
+\label{sec:awgn2-cdf}
+
+Let $\bZ \sim \cN^n(0,1)$.  Applying a symmetry argument allows us to take $\bx=\BRA{\sqrt{nA}, 0, \dots, 0}$ where $A = P/\sigma^2 = \mathrm{SNR}$.  Then
+\begin{align*}
+	\PR{\frac{\BRAi{\bx,\bx+\bZ}}{\norm{\bx}\norm{\bx+\bZ}} < t}
+	&= \PR{\norm{\bx}+Z_1 < t\norm{\bx+\bZ}} \\
+	&= \PR{\BRA{\norm{\bx}+Z_1}^2 < t^2\BRA{\BRA{\norm{\bx}+Z_1}^2+\norm{\bZ_2^n}^2}\bigg|\norm{\bx}+Z_1 > 0}\PR{\norm{\bx}+Z_1 > 0} \\
+	&\quad + \PR{\norm{\bx}+Z_1 \leq 0} \\
+	&= \PR{\norm{\bx}+Z_1 < \sqrt{\frac{t^2}{1-t^2}}\norm{\bZ_2^n}\bigg|\norm{\bx}+Z_1 > 0}\PR{\norm{\bx}+Z_1 > 0} \\
+	&\quad + \PR{\norm{\bx}+Z_1 \leq 0} \\
+	&= \PR{\norm{\bx}+Z_1 < \sqrt{\beta}\norm{\bZ_2^n}} ; \qquad \beta=\tfrac{t^2}{1-t^2} \\
+	&= \PR{\sqrt{nA}+Z_1 < \sqrt{\beta(n-1)}\sqrt{\norm{\bZ_2^n}^2/(n-1)}} \\
+	&= \PR{\frac{\sqrt{nA}+Z_1}{\sqrt{\norm{\bZ_2^n}^2 / (n-1)}} < \sqrt{\beta(n-1)}} \\
+	&= \PR{t_{n-1, \sqrt{nA}} < \sqrt{\beta(n-1)}},
+\end{align*}
+where $t_{\nu, \mu}$ denotes the non-central $t$-distribution with $\nu$ degrees of freedom and non-centrality parameter $\mu$.  Shannon \cite{shannon1959probability} did mention the $t$-distribution but proceeded differently with the calculation.
+
+\subsection{Two forms, one probability}
+
+Combining Lemma~\ref{lemma:pairwise_continuous_v2} with the CDF calculation of Section~\ref{sec:awgn2-cdf} yields the non-trivial identity
+\begin{equation}\label{eq:awgn2-two-forms}
+	1 - F_{t_{n-1,\sqrt{nA}}}\!\BRA{\sqrt{\beta(n-1)}}
+	= \frac{1}{\pi}\BRA{1-t^2}^{(n-1)/2} \int_{0}^{\frac \pi 2}\!\BRA{1+t^2 \tan^2\theta}^{(1-n)/2}\,d\theta,
+\end{equation}
+valid for $t\in(0,1)$, $\beta = t^2/(1-t^2)$.  We use the geometric form in the sphere-packing derivation below and the non-central $t$ form for numerical evaluation.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The Meta-Converse with Optimal Output Distribution}
+\label{sec:awgn2-meta}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The meta-converse theorem (\cite[Theorem~26]{polyanskiy2010channel}) states that for any code of blocklength $n$, any error probability target $\varepsilon$ and any auxiliary output distribution $Q_{Y^n}$
+\begin{equation}\label{eq:awgn2-metaconv}
+	\log M^*(n, \varepsilon) \leq -\log \beta_{1-\varepsilon}\BRA{P_{X^n Y^n}, \, P_{X^n}\, Q_{Y^n}},
+\end{equation}
+where $\beta_q$ is the Neyman--Pearson type-II error at type-I error level $q$.  Crucially, the bound holds for \emph{any} $Q_{Y^n}$, and is tightest when $Q_{Y^n}$ is chosen to minimise $\beta_{1-\varepsilon}$.
+
+\subsection{Shannon's sphere-packing geometry = the optimal meta-converse for sphere-shell input}
+
+For the AWGN channel with codewords on the power shell $\BRAs{\bx\colon\norm{\bx}^2 = nP}$, the $Q_{Y^n}$ that minimises $\beta_{1-\varepsilon}$ in~\eqref{eq:awgn2-metaconv} is the one induced by rotational symmetry of the input and the isotropic noise, and it renders the likelihood-ratio test dependent on $\by$ only through the angular correlation $\hat\rho = \BRAi{\bx,\by}/(\norm{\bx}\norm{\by})$.  The corresponding decision region is a spherical cap, and the resulting $\beta_{1-\varepsilon}$ is \emph{exactly} the pairwise error $\PR{\hat\rho \ge t}$ of Lemma~\ref{lemma:pairwise_continuous_v2}, with the threshold $t$ determined by the type-I error constraint through the CDF of Section~\ref{sec:awgn2-cdf}.  In other words:
+\begin{center}
+	\emph{Shannon's 1959 sphere-packing bound~\cite{shannon1959probability} \textbf{is} the meta-converse with the $\beta$-minimising $Q_{Y^n}$ for sphere-shell input.}
+\end{center}
+``Optimal'' here is understood within this scope --- among auxiliary output measures $Q_{Y^n}$ for the uniform-on-power-shell input distribution.  The bound is not asserted to be optimal over all input distributions; it is the tightest meta-converse instantiation that our ensemble admits.  The chapter's NCT converse evaluates this bound exactly, for any operating point where the log-domain pipeline is stable.
+
+\subsection{Polyanskiy's relaxation}
+
+For tractability, \cite[\S~IV-B]{polyanskiy2010channel} fixes
+\begin{equation*}
+	Q_{Y^n} = \cN(0, (1+P) I_n),
+\end{equation*}
+the capacity-achieving product output marginal under i.i.d.\ Gaussian input.  This reduces the likelihood-ratio statistic to a function of $\norm{\by}^2$ and $\BRAi{\bx, \by}$, and $\beta_{1-\varepsilon}$ admits a closed form in terms of non-central chi-squared quantiles.  However, $\cN(0,(1+P)I_n)$ is \emph{not} the $\beta$-minimising $Q_{Y^n}$: the resulting $\beta$ is strictly smaller than the optimal one, and so $-\log\beta$ is strictly larger.  Polyanskiy's bound is therefore strictly looser than the optimal meta-converse at any finite $n$.
+
+\subsection{Quantifying the relaxation cost}
+
+Figures~\ref{fig:awgn2-mismatch-snr} and~\ref{fig:awgn2-mismatch-n} show the numerical difference
+\begin{equation*}
+	R_{\chi^2}^{\mathrm{Polyanskiy}}(n, \varepsilon, \mathrm{SNR}) - R_{\mathrm{NCT}}^{\mathrm{ours}}(n, \varepsilon, \mathrm{SNR})
+\end{equation*}
+at $\varepsilon = 10^{-3}$.  The gap is non-negative across the parameter range we test (the optimal-$Q_Y$ bound is at least as tight) and decays with $n$ as $O(1/n)$.  The decay reflects a tractability--optimality trade-off rather than a defect: Polyanskiy's choice yields a closed form in terms of non-central chi-squared quantiles, whereas the optimal-$Q_Y$ value requires evaluating Lemma~\ref{lemma:pairwise_continuous_v2} numerically.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.85\textwidth]{mismatch_gap_vs_snr.png}
+	\caption{Relaxation cost of Polyanskiy's choice $Q_{Y^n} = \cN(0,(1+P)I_n)$ versus the optimal sphere-packing meta-converse, as a function of SNR, at $\varepsilon = 10^{-3}$ and several blocklengths.  Both bounds converge to the same limit as $n \to \infty$; at finite $n$ the optimal bound is numerically tighter by an amount that decays as $O(1/n)$.}
+	\label{fig:awgn2-mismatch-snr}
+\end{figure}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.85\textwidth]{mismatch_gap_vs_n.png}
+	\caption{Same gap on log--log axes.  The gap decays as $O(1/n)$ uniformly over the SNR range; the corresponding converse--achievability gap decays as $O(1/\sqrt n)$, so the relaxation cost is a lower-order effect but non-zero at any practical blocklength.}
+	\label{fig:awgn2-mismatch-n}
+\end{figure}
+
+\subsection{Exactness unifies the two directions}
+\label{sec:awgn2-exactness-remark}
+
+Polyanskiy's specific $Q_Y$ choice produces, after the standard analysis, a value of $\beta$ that lower-bounds the optimal one.  This is the correct direction for the converse:~\eqref{eq:awgn2-metaconv} carries $-\log\beta$ on the right-hand side, so a lower bound on $\beta$ yields a valid (if numerically loose) upper bound on $\log M^*$.  For achievability the $\kappa\beta$ framework of~\cite{polyanskiy2010channel} starts from a different inequality:
+\begin{equation}\label{eq:awgn2-kappabeta}
+	\log M \geq \log\kappa_\tau - \log\beta_{1-\varepsilon+\tau},
+\end{equation}
+which on the same $\beta$ object requires the \emph{upper}-bounding direction.  A bound in the wrong direction is unusable here, and~\cite{polyanskiy2010channel} resolves this by deriving a separate, non-trivial upper bound on $\beta_q$ through its own argument.  Concretely, the same $\beta$ quantity is bounded in opposite directions by two independent arguments --- one for the converse, one for the achievability --- each carrying its own approximation error.
+
+An exact evaluation of $\beta$ --- as provided by Lemma~\ref{lemma:pairwise_continuous_v2} --- removes this asymmetry: the same function $F(R) = \PR{\hat\rho \ge t}$ (with $t$ parametrised by the target rate) serves both directions:
+\begin{itemize}
+	\item as the right-hand side of the converse~\eqref{eq:awgn2-metaconv}, giving the optimal upper bound on the rate for sphere-shell input;
+	\item as the integrand of the $\mathrm{RCU}^+$ achievability of Section~\ref{sec:awgn2-rcu}, giving a matching lower bound modulo the single Bernoulli envelope step quantified in Section~\ref{sec:awgn2-exact-rc}.
+\end{itemize}
+This is a recurring theme of the thesis: many bounds that appear distinct in the literature collapse into the two sides of the same pairwise error probability, and once that quantity is computed exactly the two directions become numerically symmetric --- the only remaining looseness is the standard random-coding envelope, which we measure separately.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The $\mathrm{RCU}^+$ Achievability via the Exact $F(R)$}
+\label{sec:awgn2-rcu}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{From the AWGN pairwise error to the $\mathrm{RCU}^+$ integral.}
+For the uniform-on-shell ensemble under maximum-likelihood decoding, conditioning on the angular correlation $T = \hat\rho(\bX, \bY)$ between the transmitted codeword and the channel output makes the per-codeword pairwise error probability a deterministic function:
+\begin{equation*}
+	\PR{\hat\rho(\bX', \bY) \ge T \,\big|\, T} \;=\; G(T), \qquad G(t) := \PR{\hat\rho \ge t}\text{ from Lemma~\ref{lemma:pairwise_continuous_v2}}.
+\end{equation*}
+Here $G$ is exactly the converse function of Section~\ref{sec:awgn2-meta} re-parametrised by $t$.  Writing $W = -\log G(T)$ and $F(\gamma) = \PR{W \le \gamma}$ for the cumulative distribution of $W$ under the channel ensemble, the $\mathrm{RCU}^+$ bound of Chapter~\ref{ch:point_to_point} reduces (after one application of integration by parts on $\Es{T}{\min(1, (M-1) G(T))}$) to
+\begin{equation}\label{eq:awgn2-rcuplus}
+	\varepsilon_{\mathrm{ach}}^+(\log M) \;=\; \int_{\log M}^{\infty} F(\gamma) \, e^{\log M - \gamma}\,d\gamma,
+\end{equation}
+with the corresponding achievable rate $R_{\mathrm{ach}}^+(n,\varepsilon) = \max\BRAs{R:\varepsilon_{\mathrm{ach}}^+(nR \ln 2) \leq \varepsilon}$.  The same $F$ that anchors the converse appears here as the integrand: the $\mathrm{RCU}^+$ bound uses the exact pairwise error probability without any further bounding.  The single step that takes us from the random-coding ensemble to~\eqref{eq:awgn2-rcuplus} is the Bernoulli envelope $1 - (1-G(T))^{M-1} \le \min\BRAs{1, (M-1) G(T)}$, whose looseness is quantified directly in Section~\ref{sec:awgn2-exact-rc}.
+
+In Section~\ref{sec:awgn2-results} we compare $R_{\mathrm{ach}}^+$ to the NCT converse of Section~\ref{sec:awgn2-meta} and observe gaps of $0.009$ bits/use at $n=200$, shrinking to $0.002$ at $n=1000$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Small-Blocklength Refinement: Exact Random Coding vs.\ the $\mathrm{RCU}^+$ Envelope}
+\label{sec:awgn2-exact-rc}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The $\mathrm{RCU}^+$ bound~\eqref{eq:awgn2-rcuplus} is derived from the per-$Y$ random-coding inequality
+\begin{equation}\label{eq:awgn2-percl}
+	\Pe \;\leq\; \Es{T}{1 - \BRA{1-G(T)}^{M-1}},
+\end{equation}
+where $T = \hat\rho(\bX, \bY)$ is the angular correlation between the transmitted codeword and the channel output and $G(t) = \PR{\hat\rho \ge t}$ is the Lemma~\ref{lemma:pairwise_continuous_v2} integral.  For the uniform-on-power-shell ensemble under maximum-likelihood decoding, the right-hand side of~\eqref{eq:awgn2-percl} is the \emph{exact} ensemble-average error probability of a random code of size $M = 2^{nR}$; the inequality becomes an equality, not just a bound.  This is a rare instance in which the exact random-coding error probability admits a tractable, ensemble-specific closed form, allowing direct measurement of the standard Gallager-style envelope cost rather than relying on it.
+
+The $\mathrm{RCU}^+$ bound applies the Bernoulli inequality $(1-x)^{M-1} \ge 1 - (M-1) x$ pointwise in~\eqref{eq:awgn2-percl} to obtain the min-with-$1$ envelope
+\begin{equation}\label{eq:awgn2-envelope}
+	1 - (1-G(T))^{M-1} \;\leq\; \min\BRAs{1,\,(M-1) \, G(T)},
+\end{equation}
+which, passed through the expectation, yields the \emph{union envelope}
+\begin{equation}\label{eq:awgn2-union}
+	\Pe \;\leq\; \Es{T}{\min\BRAs{1,(M-1) G(T)}}.
+\end{equation}
+
+\begin{remark}[Two ways to the same envelope]
+The integral form~\eqref{eq:awgn2-rcuplus} and the expectation~\eqref{eq:awgn2-union} are equal (up to the trivial $M \leftrightarrow M-1$ correction).  Indeed, splitting the expectation at the point where $(M-1) G(T) = 1$ and integrating by parts in the log-domain variable $\gamma = -\log G(T)$ gives
+\begin{equation*}
+	\Es{T}{\min(1, (M-1) G(T))} \;=\; \int_{\log(M-1)}^{\infty} F(\gamma) \, e^{\log(M-1) - \gamma}\, d\gamma,
+\end{equation*}
+where $F(\gamma) = \PR{-\log G(T) \le \gamma}$ is the converse CDF of Section~\ref{sec:awgn2-meta} evaluated on the log-density axis.  Thus the library's $\mathrm{RCU}^+$ integral form and a Monte-Carlo evaluation of~\eqref{eq:awgn2-union} compute the same quantity; we have verified numerical agreement to Monte-Carlo noise (typical ratio $1.00 \pm 0.01$ at $5\!\times\!10^5$ samples).
+\end{remark}
+
+Two quantities therefore remain to compare: the \emph{exact} right-hand side of~\eqref{eq:awgn2-percl} and the \emph{envelope}~\eqref{eq:awgn2-union}.  The pointwise gap
+\begin{equation*}
+	1 - (1-G(T))^{M-1} \;\leq\; \min\BRAs{1, (M-1) G(T)}
+\end{equation*}
+is tight both as $G \to 0$ and as $G \to 1/(M-1)$; looseness arises only in the \emph{concave} interior, where the Bernoulli inequality loses a $O(G^2)$ term.  This gives a clean intuition for the small-$n$ vs.\ large-$n$ behaviour:
+\begin{itemize}
+	\item As $n$ grows, the distribution of $T$ under $H_0$ concentrates around its mean $\sqrt{P/(1+P)}$ (the tightest concentration interval has width $O(1/\sqrt n)$).  For most realisations of $T$, $(M-1) G(T)$ is therefore either much smaller or much larger than $1$, with vanishing mass in the transition region; the envelope is essentially exact.
+	\item At small $n$, the $T$ distribution has $O(1)$ spread, and a non-negligible fraction of samples falls in the transition region $(M-1) G(T) \sim 1$, where the Bernoulli envelope is genuinely loose.
+\end{itemize}
+This explains why we see envelope cost only at small blocklengths.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\textwidth]{exact_rc_vs_bounds.png}
+	\caption{Exact random-coding error probability~\eqref{eq:awgn2-percl} (black, Monte-Carlo with $5\!\times\!10^5$ samples of $T$) vs.\ the $\mathrm{RCU}^+$ envelope~\eqref{eq:awgn2-union} (green) at $n \in \{30, 50, 100\}$, $\mathrm{SNR} = 0$~dB.  The NCT converse (red) is the lower bound on $\Pe$.  The two achievable curves track each other closely throughout; the envelope cost is visible only at low rates on the $n=100$ panel, amounting to a factor of at most $\sim 1.5$ in $\Pe$.}
+	\label{fig:awgn2-exact-rc}
+\end{figure}
+
+Figure~\ref{fig:awgn2-exact-rc} shows the two quantities at $n \in \{30, 50, 100\}$, $\mathrm{SNR}=0$~dB, together with the converse.  The envelope cost is modest: at $n = 50$ it is below the Monte-Carlo noise level across the entire displayed $R$ range; at $n = 100$ it becomes visible at low rates and never exceeds a factor of about $1.5$ in $\Pe$, which translates to at most a few thousandths of a bit/use in achievable rate.  For moderate-to-large blocklengths the envelope is indistinguishable from the exact value.
+
+The concentration argument also explains, in a single sentence, why union-type bounds are typically tight at moderate-to-large blocklengths in random-coding theory more generally: when $T$ concentrates, the random variable $(M-1) G(T)$ does too, leaving the Bernoulli envelope tight on a high-probability set.  AWGN with the sphere-shell ensemble is a particularly clean instance because the concentration is governed by a one-dimensional statistic, but the mechanism is the same.
+
+For engineering applications at very short blocklengths (e.g.\ $n \lesssim 50$ in URLLC-style regimes) or at stringent error targets where even a factor of $1.5$ matters, the exact formula~\eqref{eq:awgn2-percl} can be evaluated by Monte Carlo via the library's \texttt{ExactRandomCoding} class.  For the rest of the chapter we use the $\mathrm{RCU}^+$ closed form: it is within a fraction of a bit of the exact value across every practical operating point and requires only the precomputed $F$ grid together with one closed-form integration.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{A Note on Numerical Evaluation}
+\label{sec:awgn2-numerics}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Computing the bounds numerically requires care in two places, both at large $n$ where the quantities of interest become exponentially small.  We give only high-level remarks here and refer to the public library (released with this thesis) for the implementation details.
+
+First, the Lemma~\ref{lemma:pairwise_continuous_v2} integrand and its prefactor $\BRA{1-t^2}^{(n-1)/2}$ both underflow to zero in linear arithmetic for moderately large $n$ and $t$ close to $1$.  A log-domain evaluation --- keeping the prefactor as a log-linear term and computing the integral via log-sum-exp on a $\theta$-grid --- extends the working range indefinitely; agreement with the linear form is at the $10^{-4}$ level throughout the region where the latter is defined.
+
+Second, the non-central $t$ CDF of Section~\ref{sec:awgn2-cdf} needs a genuine log-domain evaluation, because SciPy's built-in \texttt{logcdf} is merely $\log(\texttt{cdf})$ under the hood and therefore inherits the underflow of the underlying linear primitive.  We use the integral representation $F(x; \nu, \mu) = \Es{X\sim\chi^2_\nu}{\Phi\BRA{x\sqrt{X/\nu} - \mu}}$ on a log-uniform $X$-grid --- the one scipy distribution with a real log-stable CDF is $\Phi$, and everything else is a log-sum-exp over that.  Cross-validation against the central-$t$ case (where scipy is trustworthy) confirms agreement to $10^{-6}$; in the tails, our routine remains finite long after scipy returns \texttt{NaN}.
+
+The $\mathrm{RCU}^+$ integral~\eqref{eq:awgn2-rcuplus} itself admits a clean factorisation $\varepsilon_{\mathrm{ach}}^+(\log M) = F(R)\cdot J(R)$ with
+\begin{equation*}
+	J(R) = \int_{\log M}^{\infty} \frac{F(\gamma)}{F(R)}\, e^{\log M - \gamma}\,d\gamma \in [1, \ 1/F(R)],
+\end{equation*}
+so that $\log \varepsilon_{\mathrm{ach}}^+ = \log F(R) + \log J(R)$ is a sum of two representable quantities even when $\varepsilon_{\mathrm{ach}}^+$ itself is $10^{-200}$.  The inversion $\varepsilon \to R$ is then a one-dimensional root-find on a smooth monotone function.
+
+The combined effect: the library produces sensible bounds at blocklengths and SNRs where the naive pipeline (scipy NCT, linear RCU$^+$ integrand) returns \texttt{NaN} across the board.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Numerical Results}
+\label{sec:awgn2-results}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Reference operating point}
+
+We begin with a detailed comparison at $n = 200$, $\mathrm{SNR} = 0$~dB, $\varepsilon = 10^{-3}$, for which the Shannon capacity is $C = 0.5000$ bits/use.
+
+\begin{table}[ht]
+\centering
+\caption{Rate bounds at $n = 200$, $\mathrm{SNR} = 0$~dB, $\varepsilon = 10^{-3}$.}
+\label{tab:awgn2-reference}
+\begin{tabular}{lccc}
+	\toprule
+	Bound & Type & $R$ (bits/use) & Gap to converse \\
+	\midrule
+	Shannon capacity                                & ---     & 0.5000 & --- \\
+	NCT converse (ours; optimal meta-converse)      & Upper   & 0.3456 & --- \\
+	$\chi^2$ converse~\cite{polyanskiy2010channel}  & Upper   & 0.3484 & --- \\
+	$\mathrm{RCU}^+$ (ours)                         & Lower   & 0.3365 & 0.0092 \\
+	Normal approximation~\cite{polyanskiy2010channel} & Approx. & 0.3261 & 0.0196 \\
+	$\kappa\beta$~\cite{polyanskiy2010channel}      & Lower   & 0.2837 & 0.0620 \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+The NCT converse and $\mathrm{RCU}^+$ bracket the true rate $R^*(n,\varepsilon)$ within $0.009$ bits/use --- less than $3\%$ of the total finite-blocklength penalty $C - R^* \approx 0.16$ bits.  The relaxation cost relative to $\chi^2$ is $0.003$ bits, consistent with the $O(1/n)$ scaling of Figure~\ref{fig:awgn2-mismatch-n}.
+
+\subsection{Rate vs.\ SNR}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.85\textwidth]{rate_vs_snr_n200.png}
+	\caption{Rate vs.\ SNR at $n = 200$, $\varepsilon = 10^{-3}$.  $\mathrm{RCU}^+$ tracks the NCT converse closely with a gap of $\sim 0.009$ bits/use essentially constant across SNR.}
+	\label{fig:awgn2-rate-snr-n200}
+\end{figure}
+
+Figure~\ref{fig:awgn2-rate-snr-n200} shows the whole bound stack at $n=200$ across $-2$ to $+10$~dB.  The absolute converse--achievability gap is essentially constant in SNR; this is because, at fixed $n$ and $\varepsilon$, the leading-order penalty $\sqrt{V/n}\,Q^{-1}(\varepsilon)$ depends on SNR only through the dispersion $V(\mathrm{SNR}) = \mathrm{SNR}(2+\mathrm{SNR})/(2(1+\mathrm{SNR})^2)\BRA{\log_2 e}^2$, which varies slowly across the displayed range (from $V \approx 0.52$ at $0$~dB to $V \approx 0.36$ at $6$~dB).  The gap is therefore additive in $R$ rather than multiplicative in $C$, reflecting the additive structure of the dispersion-driven penalty.
+
+\subsection{Convergence to capacity}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.85\textwidth]{rate_vs_n_snr0.png}
+	\caption{Rate vs.\ blocklength at $\mathrm{SNR} = 0$~dB, $\varepsilon = 10^{-3}$.  All bounds converge toward $C = 0.5$ bits/use; the converse--$\mathrm{RCU}^+$ gap shrinks from $0.053$ bits at $n = 50$ to $0.0016$ at $n = 1000$, following the $O(1/\sqrt n)$ scaling of the channel dispersion.}
+	\label{fig:awgn2-rate-n-snr0}
+\end{figure}
+
+The converse--achievability gap closes at the rate predicted by the normal approximation $\Theta(1/\sqrt n)$.  Combined with Figure~\ref{fig:awgn2-mismatch-n}, we see the two relevant scales: the true finite-blocklength penalty ($1/\sqrt n$) and the relaxation cost of Polyanskiy's choice of $Q_Y$ ($1/n$, an order faster); at any finite $n$ the relaxation cost is a lower-order effect but not zero.
+
+\subsection{Flagship: converse, $\mathrm{RCU}^+$ and normal approximation in one picture}
+
+Figure~\ref{fig:awgn2-showcase} plots the three main quantities --- converse (dashed), $\mathrm{RCU}^+$ (solid with markers) and normal approximation (dotted) --- as a function of rate, on a logarithmic error-probability axis, for six SNRs spanning $0$--$20$~dB at $n = 500$.  Each SNR traces a steep waterfall from $P_e \approx 1$ near capacity to $P_e \to 0$ at lower rates.  The inset zoom at $\mathrm{SNR} = 8$~dB resolves the tight converse--$\mathrm{RCU}^+$ bracket and shows that the normal approximation, while qualitatively correct, is displaced by several orders of magnitude at any fixed rate.  The displacement is a direct consequence of the waterfall's steepness: a $\sim$0.005~bit/use shift in $R$ near the operating point corresponds to a one-decade shift in $P_e$, so even small approximation errors in $R$ translate to large multiplicative errors in $\varepsilon$.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.97\textwidth]{showcase_waterfall_n500.png}
+	\caption{AWGN converse (dashed) vs.\ $\mathrm{RCU}^+$ achievable (solid, $\circ$) vs.\ normal approximation (dotted) at $n = 500$, for six SNRs coded by colour.  Each SNR produces a tight converse--achievable bracket; the gap to the normal approximation is visible in the inset zoom at $\mathrm{SNR} = 8$~dB.}
+	\label{fig:awgn2-showcase}
+\end{figure}
+
+\subsection{Waterfall representation}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.85\textwidth]{error_vs_snr_n200.png}
+	\caption{Error probability vs.\ SNR at $n = 200$, $R = 0.3$ bits/use.  NCT converse provides a tight lower bound on $P_e$; $\mathrm{RCU}^+$ provides a matching upper bound; normal approximation is displaced in the waterfall.}
+	\label{fig:awgn2-error-snr-n200}
+\end{figure}
+
+The $R \to \varepsilon$ representation (Figure~\ref{fig:awgn2-error-snr-n200}) complements the rate-based figures and is the natural representation in coding-theoretic applications, where the operating $(n, R)$ is fixed and one asks ``how much SNR is needed for target $\varepsilon$?''.  The waterfall is steep --- characteristically dropping several decades of $\varepsilon$ within a fraction of a dB of SNR --- which is exactly the regime where the tightness of the $\mathrm{RCU}^+$ bound matters most: a small bias in the achievable rate becomes a large multiplicative error in $\varepsilon$, while the converse and $\mathrm{RCU}^+$ track each other to within $\sim$1\% in $R$ across the figure.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Comparison to Other Achievability Bounds}
+\label{sec:awgn2-other-ach}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+We briefly contrast $\mathrm{RCU}^+$ with three standard alternatives:
+\begin{enumerate}
+	\item \textbf{$\kappa\beta$ achievability.}  Discussed in Section~\ref{sec:awgn2-exactness-remark}.  All numerical comparisons in this chapter use a faithful port of Polyanskiy's reference MATLAB implementation (\texttt{kappabeta\_ach.m} + \texttt{betaq\_up\_v2.m}), with Newton-iterated quantile evaluation and a log-domain fallback for the $\beta_q$ term.  Its looseness at fixed $(n, \varepsilon, \mathrm{SNR})$ is a consequence of the extra relaxation required to obtain an upper bound on $\beta_q$.  Furthermore, $\kappa\beta$ bounds the \emph{maximal} error probability $\varepsilon^* = \max_m P_e(m)$ rather than the average $\bar\varepsilon = \frac{1}{M}\sum_m P_e(m)$; since $\bar\varepsilon \leq \varepsilon^*$, a bound on the former is automatically a (potentially looser) bound on the latter, contributing a further widening relative to the other achievability bounds in this chapter.
+	\item \textbf{Gallager's random-coding bound.}  Gallager's closed-form exponent is tighter than $\kappa\beta$ at very small blocklengths ($n \lesssim 100$) and very stringent error targets ($\varepsilon \lesssim 10^{-5}$), and looser at moderate $n$.  It is never as tight as $\mathrm{RCU}^+$.
+	\item \textbf{Normal approximation.}  A second-order expansion $R \approx C - \sqrt{V/n}\,Q^{-1}(\varepsilon) + \frac{\log_2 n}{2n}$ that is accurate for rate-based figures but markedly less accurate in the waterfall representation (Figure~\ref{fig:awgn2-showcase}, inset).  Useful as a quick estimate.
+\end{enumerate}
+
+At the reference point of Table~\ref{tab:awgn2-reference}, the converse-to-bound gaps order as
+\begin{equation*}
+	\mathrm{RCU}^+ : 0.009 \ \text{bits/use} \ \ <\ \  \kappa\beta : 0.062 \ \ <\ \  \mathrm{Gallager} : 0.092.
+\end{equation*}
+$\mathrm{RCU}^+$ is approximately $6.7\times$ tighter than $\kappa\beta$ and $10\times$ tighter than Gallager in this metric.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Discussion}
+\label{sec:awgn2-discussion}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The chapter has demonstrated, on the AWGN channel and on the symmetric (sphere-shell) ensemble it admits, what the thesis argues abstractly in Part~\ref{part:I}: that the converse and the achievability directions of the finite-blocklength problem are governed by the same pairwise error probability and that an exact evaluation of that quantity changes how one writes the bounds.  Three key insights emerge from this analysis.
+
+\paragraph{1.\ Exactness eliminates the converse--achievability asymmetry.}
+Polyanskiy--Poor--\verdu's framework requires two distinct relaxations of the same $\beta$ object --- a lower bound for the converse, an upper bound for the achievability.  These relaxations are independently chosen and independently incur looseness.  Exact evaluation of the pairwise error probability collapses both directions into the same function $F$: the converse uses it on the right-hand side of the meta-converse and the achievability integrates against it through $\mathrm{RCU}^+$.  The only remaining looseness on the achievability side is the standard random-coding envelope (Bernoulli inequality), and Section~\ref{sec:awgn2-exact-rc} shows it is small at every blocklength of practical interest.
+
+\paragraph{2.\ The relaxation cost is genuinely second-order.}
+The data of Figures~\ref{fig:awgn2-mismatch-snr}--\ref{fig:awgn2-mismatch-n} reveal a clean two-scale picture: the converse--achievability gap closes as $\Theta(1/\sqrt{n})$, set by the channel dispersion $V$, while the relaxation cost of any specific $Q_Y$ choice closes as $O(1/n)$.  At any fixed finite $n$ the relaxation cost is therefore a small refinement on top of the dispersion-driven gap, not a leading-order error.  This justifies the practical use of Polyanskiy's bound as an effective approximation, while showing that the exact computation is required to claim the optimal converse.
+
+\paragraph{3.\ Numerical tractability is achievable, not just theoretical.}
+The bounds of this chapter are not merely well-defined: they are evaluable in seconds for any $(n, \varepsilon, \mathrm{SNR})$ of practical interest, including regimes where naive use of off-the-shelf statistical software returns \texttt{NaN}.  Section~\ref{sec:awgn2-numerics} sketched the two ingredients required --- a log-domain Lemma~\ref{lemma:pairwise_continuous_v2} integral and a log-stable non-central $t$ CDF derived from the integral representation $\Es{X\sim\chi^2_\nu}{\Phi(x\sqrt{X/\nu}-\mu)}$ --- and we release the complete pipeline as a public library so that the figures of this chapter, and their natural extensions, can be reproduced and adapted by others.\footnote{Public library: \texttt{[TODO: github URL]}.}

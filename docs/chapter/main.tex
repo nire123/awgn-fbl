@@ -1,0 +1,26 @@
+% Self-contained driver for the AWGN finite-blocklength chapter.
+% Compile with:    pdflatex main.tex   (twice for cross-references)
+%
+% Output: main.pdf, the chapter as a standalone document with figures
+% drawn from ../../plots/chapter/.
+
+\documentclass[11pt,a4paper]{report}
+
+\input{_preamble}
+
+\graphicspath{{../../plots/chapter/}}
+
+\title{Finite-Blocklength Bounds for the AWGN Channel\\
+       \large (Standalone chapter, drawn from the PhD thesis of Nir Elkayam)}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+% The chapter.  References to thesis-internal items render as red placeholders.
+\input{chapter_awgn}
+
+\end{document}

@@ -1,0 +1,55 @@
+classDiagram
+    class AWGNConverseBase {
+        +int n
+        +float snr_db
+        +float snr
+        +shannon_capacity() float
+        +_pairwise_error_prob(t) float
+        +converse_rate(epsilon)* float
+    }
+
+    class NoncentralTConverse {
+        +converse_rate(epsilon) float
+        +converse_error(rate_bits) float
+    }
+
+    class ChiSquaredConverse {
+        +converse_rate(epsilon) float
+    }
+
+    class SolidAngleConverse {
+        -_solid_angle_ratio(theta) float
+        +converse_rate(epsilon) float
+    }
+
+    class RCUAchievable {
+        +F_eval FastFREvaluator
+        +achievable_rate(epsilon) float
+        +achievable_error(R_bits) float
+    }
+
+    class KappaBetaAchievableV2 {
+        -_kappa_inf(tau) float
+        -_betaq_upper(q) float
+        +achievable_rate(epsilon) float
+    }
+
+    class GallagerAchievable {
+        +Rcr_bits float
+        -_gallager_pe(R_bits) float
+        +achievable_rate(epsilon) float
+        +achievable_error(R_bits) float
+    }
+
+    class FastFREvaluator {
+        +R_grid ndarray
+        +eps_grid ndarray
+        -_precompute()
+        +__call__(R) float
+    }
+
+    AWGNConverseBase <|-- NoncentralTConverse
+    AWGNConverseBase <|-- ChiSquaredConverse
+    AWGNConverseBase <|-- SolidAngleConverse
+    RCUAchievable o-- FastFREvaluator
+    FastFREvaluator ..> NoncentralTConverse : uses

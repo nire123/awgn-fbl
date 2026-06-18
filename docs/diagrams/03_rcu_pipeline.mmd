@@ -1,0 +1,30 @@
+flowchart LR
+    input([n, SNR])
+
+    subgraph Precomputation["Precomputation (once per (n, SNR))"]
+        epsg["ε grid<br/>geometric ×0.9<br/>~220 points<br/>[10⁻¹⁰, 1-10⁻¹⁰]"]
+        nct["NCT converse<br/>ε_i → R_i"]
+        pairs["Stored (R_i, ε_i)"]
+        pchip["PCHIP interpolator<br/>R → log ε"]
+    end
+
+    subgraph Query["Query F(R) in O(1 µs)"]
+        Fcall["F(R)"]
+        Fval(["ε = F(R)"])
+    end
+
+    subgraph Integration["RCU+ integral (scipy.quad)"]
+        integrand["F(γ) · exp(log M − γ)"]
+        result(["P(log M)<br/><i>achievable error</i>"])
+    end
+
+    input --> epsg --> nct --> pairs --> pchip
+    pchip --> Fcall --> Fval
+    Fval --> integrand --> result
+
+    classDef precomp fill:#e3f2fd,stroke:#0d47a1
+    classDef query fill:#f3e5f5,stroke:#4a148c
+    classDef integ fill:#d4edda,stroke:#155724
+    class epsg,nct,pairs,pchip precomp
+    class Fcall,Fval query
+    class integrand,result integ

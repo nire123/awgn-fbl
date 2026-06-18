@@ -1,0 +1,14 @@
+plot,check,detail
+edge\small_n\eps1e-06.csv,S5_monotonicity,converse_nct not monotone ↑ in n: drop -0.01941 at n=24
+standard\rate_vs_eps\n50_snr-3.csv,S5_monotonicity,converse_nct not monotone ↑ in epsilon: drop -0.005511 at epsilon=2.48163e-08
+standard\rate_vs_n\snr+0_eps1e-02.csv,S5_monotonicity,kappabeta_v2 not monotone ↑ in n: drop -0.005326 at n=1343
+standard\rate_vs_n\snr+0_eps1e-03.csv,S5_monotonicity,kappabeta_v2 not monotone ↑ in n: drop -0.006597 at n=1425
+standard\rate_vs_n\snr+0_eps1e-06.csv,S5_monotonicity,kappabeta_v2 not monotone ↑ in n: drop -0.01134 at n=1508
+standard\rate_vs_n\snr+3_eps1e-02.csv,S5_monotonicity,kappabeta_v2 not monotone ↑ in n: drop -0.006829 at n=851
+standard\rate_vs_n\snr+3_eps1e-03.csv,S5_monotonicity,kappabeta_v2 not monotone ↑ in n: drop -0.004343 at n=933
+standard\rate_vs_n\snr+3_eps1e-06.csv,S5_monotonicity,kappabeta_v2 not monotone ↑ in n: drop -0.01554 at n=933
+standard\rate_vs_n\snr+6_eps1e-02.csv,S5_monotonicity,kappabeta_v2 not monotone ↑ in n: drop -0.00721 at n=605
+standard\rate_vs_n\snr+6_eps1e-03.csv,S5_monotonicity,kappabeta_v2 not monotone ↑ in n: drop -0.00931 at n=605
+standard\rate_vs_n\snr+6_eps1e-06.csv,S5_monotonicity,kappabeta_v2 not monotone ↑ in n: drop -0.01769 at n=687
+standard\rate_vs_n\snr-3_eps1e-06.csv,S5_monotonicity,converse_nct not monotone ↑ in n: drop -0.01164 at n=112
+standard\rate_vs_snr\n50_eps1e-06.csv,S5_monotonicity,converse_nct not monotone ↑ in snr_db: drop -0.006539 at snr_db=-3.36842
