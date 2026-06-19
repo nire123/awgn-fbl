@@ -24,80 +24,113 @@ Shannon capacity,0.001,6,1754,1.15823
 Shannon capacity,0.001,6,1836,1.15823
 Shannon capacity,0.001,6,1918,1.15823
 Shannon capacity,0.001,6,2000,1.15823
-NCT converse (ours),0.001,6,30,0.777555
-NCT converse (ours),0.001,6,112,0.925272
-NCT converse (ours),0.001,6,194,0.972727
-NCT converse (ours),0.001,6,276,0.998792
+NCT converse (ours),0.001,6,30,0.777553
+NCT converse (ours),0.001,6,112,0.925271
+NCT converse (ours),0.001,6,194,0.972726
+NCT converse (ours),0.001,6,276,0.998791
 NCT converse (ours),0.001,6,358,1.01596
 NCT converse (ours),0.001,6,440,1.02841
 NCT converse (ours),0.001,6,522,1.03798
 NCT converse (ours),0.001,6,605,1.04573
-NCT converse (ours),0.001,6,687,1.05205
+NCT converse (ours),0.001,6,687,1.05204
 NCT converse (ours),0.001,6,769,1.05737
 NCT converse (ours),0.001,6,851,1.06195
 NCT converse (ours),0.001,6,933,1.06594
-RCU+ achievable (ours),0.001,6,30,0.684943
-RCU+ achievable (ours),0.001,6,112,0.908228
-RCU+ achievable (ours),0.001,6,194,0.963652
-RCU+ achievable (ours),0.001,6,276,0.992651
-RCU+ achievable (ours),0.001,6,358,1.01134
-RCU+ achievable (ours),0.001,6,440,1.0247
-RCU+ achievable (ours),0.001,6,522,1.03489
-RCU+ achievable (ours),0.001,6,605,1.04309
-RCU+ achievable (ours),0.001,6,687,1.04973
-RCU+ achievable (ours),0.001,6,769,1.05532
-RCU+ achievable (ours),0.001,6,851,1.06011
-RCU+ achievable (ours),0.001,6,933,1.06427
-Gallager achievable (avg err),0.001,6,30,0.419137
-Gallager achievable (avg err),0.001,6,112,0.770055
-Gallager achievable (avg err),0.001,6,194,0.854603
-Gallager achievable (avg err),0.001,6,276,0.899776
-Gallager achievable (avg err),0.001,6,358,0.929043
-Gallager achievable (avg err),0.001,6,440,0.950109
-Gallager achievable (avg err),0.001,6,522,0.966156
-Gallager achievable (avg err),0.001,6,605,0.979093
-Gallager achievable (avg err),0.001,6,687,0.989555
-Gallager achievable (avg err),0.001,6,769,0.998321
-Gallager achievable (avg err),0.001,6,851,1.00589
-Gallager achievable (avg err),0.001,6,933,1.01239
-Gallager achievable (avg err),0.001,6,1015,1.01819
-Gallager achievable (avg err),0.001,6,1097,1.02328
-Gallager achievable (avg err),0.001,6,1179,1.02787
-Gallager achievable (avg err),0.001,6,1261,1.03197
-Gallager achievable (avg err),0.001,6,1343,1.03579
-Gallager achievable (avg err),0.001,6,1425,1.03925
-Gallager achievable (avg err),0.001,6,1508,1.04243
-Gallager achievable (avg err),0.001,6,1590,1.04533
-Gallager achievable (avg err),0.001,6,1672,1.04802
-Gallager achievable (avg err),0.001,6,1754,1.05056
-Gallager achievable (avg err),0.001,6,1836,1.0529
-Gallager achievable (avg err),0.001,6,1918,1.05516
-Gallager achievable (avg err),0.001,6,2000,1.05721
-$\kappa\beta$ achievable v2 (max err),0.001,6,30,0.373516
-$\kappa\beta$ achievable v2 (max err),0.001,6,112,0.809862
-$\kappa\beta$ achievable v2 (max err),0.001,6,194,0.904246
-$\kappa\beta$ achievable v2 (max err),0.001,6,276,0.949804
-$\kappa\beta$ achievable v2 (max err),0.001,6,358,0.977705
-$\kappa\beta$ achievable v2 (max err),0.001,6,440,0.996965
-$\kappa\beta$ achievable v2 (max err),0.001,6,522,1.01125
-$\kappa\beta$ achievable v2 (max err),0.001,6,605,1.00194
-$\kappa\beta$ achievable v2 (max err),0.001,6,687,1.01322
-$\kappa\beta$ achievable v2 (max err),0.001,6,769,1.02249
-$\kappa\beta$ achievable v2 (max err),0.001,6,851,1.03027
-$\kappa\beta$ achievable v2 (max err),0.001,6,933,1.03691
-$\kappa\beta$ achievable v2 (max err),0.001,6,1015,1.04266
-$\kappa\beta$ achievable v2 (max err),0.001,6,1097,1.0477
-$\kappa\beta$ achievable v2 (max err),0.001,6,1179,1.05216
-$\kappa\beta$ achievable v2 (max err),0.001,6,1261,1.05615
-$\kappa\beta$ achievable v2 (max err),0.001,6,1343,1.05974
-$\kappa\beta$ achievable v2 (max err),0.001,6,1425,1.063
-$\kappa\beta$ achievable v2 (max err),0.001,6,1508,1.066
-$\kappa\beta$ achievable v2 (max err),0.001,6,1590,1.06871
-$\kappa\beta$ achievable v2 (max err),0.001,6,1672,1.0712
-$\kappa\beta$ achievable v2 (max err),0.001,6,1754,1.07351
-$\kappa\beta$ achievable v2 (max err),0.001,6,1836,1.07565
-$\kappa\beta$ achievable v2 (max err),0.001,6,1918,1.07764
-$\kappa\beta$ achievable v2 (max err),0.001,6,2000,1.0795
+NCT converse (ours),0.001,6,1015,1.06946
+NCT converse (ours),0.001,6,1097,1.0726
+NCT converse (ours),0.001,6,1179,1.07541
+NCT converse (ours),0.001,6,1261,1.07796
+NCT converse (ours),0.001,6,1343,1.08029
+NCT converse (ours),0.001,6,1425,1.08241
+NCT converse (ours),0.001,6,1508,1.0844
+NCT converse (ours),0.001,6,1590,1.0862
+NCT converse (ours),0.001,6,1672,1.08788
+NCT converse (ours),0.001,6,1754,1.08945
+NCT converse (ours),0.001,6,1836,1.09091
+NCT converse (ours),0.001,6,1918,1.09228
+NCT converse (ours),0.001,6,2000,1.09357
+$\chi^2$ converse (Polyanskiy),0.001,6,30,0.789656
+$\chi^2$ converse (Polyanskiy),0.001,6,112,0.92903
+$\chi^2$ converse (Polyanskiy),0.001,6,194,0.974983
+$\chi^2$ converse (Polyanskiy),0.001,6,276,1.00041
+$\chi^2$ converse (Polyanskiy),0.001,6,358,1.01723
+$\chi^2$ converse (Polyanskiy),0.001,6,440,1.02945
+$\chi^2$ converse (Polyanskiy),0.001,6,522,1.03886
+RCU$^+$ achievable (ours),0.001,6,30,0.684941
+RCU$^+$ achievable (ours),0.001,6,112,0.908227
+RCU$^+$ achievable (ours),0.001,6,194,0.963652
+RCU$^+$ achievable (ours),0.001,6,276,0.99265
+RCU$^+$ achievable (ours),0.001,6,358,1.01134
+RCU$^+$ achievable (ours),0.001,6,440,1.0247
+RCU$^+$ achievable (ours),0.001,6,522,1.03489
+RCU$^+$ achievable (ours),0.001,6,605,1.04309
+RCU$^+$ achievable (ours),0.001,6,687,1.04973
+RCU$^+$ achievable (ours),0.001,6,769,1.05532
+RCU$^+$ achievable (ours),0.001,6,851,1.06011
+RCU$^+$ achievable (ours),0.001,6,933,1.06427
+RCU$^+$ achievable (ours),0.001,6,1015,1.06793
+RCU$^+$ achievable (ours),0.001,6,1097,1.07118
+RCU$^+$ achievable (ours),0.001,6,1179,1.0741
+RCU$^+$ achievable (ours),0.001,6,1261,1.07674
+RCU$^+$ achievable (ours),0.001,6,1343,1.07914
+RCU$^+$ achievable (ours),0.001,6,1425,1.08133
+RCU$^+$ achievable (ours),0.001,6,1508,1.08338
+RCU$^+$ achievable (ours),0.001,6,1590,1.08524
+RCU$^+$ achievable (ours),0.001,6,1672,1.08697
+RCU$^+$ achievable (ours),0.001,6,1754,1.08858
+RCU$^+$ achievable (ours),0.001,6,1836,1.09008
+RCU$^+$ achievable (ours),0.001,6,1918,1.09149
+RCU$^+$ achievable (ours),0.001,6,2000,1.09281
+Gallager achievable,0.001,6,30,0.419137
+Gallager achievable,0.001,6,112,0.770055
+Gallager achievable,0.001,6,194,0.854603
+Gallager achievable,0.001,6,276,0.899776
+Gallager achievable,0.001,6,358,0.929043
+Gallager achievable,0.001,6,440,0.950109
+Gallager achievable,0.001,6,522,0.966156
+Gallager achievable,0.001,6,605,0.979093
+Gallager achievable,0.001,6,687,0.989555
+Gallager achievable,0.001,6,769,0.998321
+Gallager achievable,0.001,6,851,1.00589
+Gallager achievable,0.001,6,933,1.01239
+Gallager achievable,0.001,6,1015,1.01819
+Gallager achievable,0.001,6,1097,1.02328
+Gallager achievable,0.001,6,1179,1.02787
+Gallager achievable,0.001,6,1261,1.03197
+Gallager achievable,0.001,6,1343,1.03579
+Gallager achievable,0.001,6,1425,1.03925
+Gallager achievable,0.001,6,1508,1.04243
+Gallager achievable,0.001,6,1590,1.04533
+Gallager achievable,0.001,6,1672,1.04802
+Gallager achievable,0.001,6,1754,1.05056
+Gallager achievable,0.001,6,1836,1.0529
+Gallager achievable,0.001,6,1918,1.05516
+Gallager achievable,0.001,6,2000,1.05721
+$\kappa\beta$ achievable (PPV-faithful),0.001,6,30,0.373516
+$\kappa\beta$ achievable (PPV-faithful),0.001,6,112,0.809862
+$\kappa\beta$ achievable (PPV-faithful),0.001,6,194,0.904246
+$\kappa\beta$ achievable (PPV-faithful),0.001,6,276,0.949804
+$\kappa\beta$ achievable (PPV-faithful),0.001,6,358,0.977705
+$\kappa\beta$ achievable (PPV-faithful),0.001,6,440,0.996965
+$\kappa\beta$ achievable (PPV-faithful),0.001,6,522,1.01125
+$\kappa\beta$ achievable (PPV-faithful),0.001,6,605,1.00194
+$\kappa\beta$ achievable (PPV-faithful),0.001,6,687,1.01322
+$\kappa\beta$ achievable (PPV-faithful),0.001,6,769,1.02249
+$\kappa\beta$ achievable (PPV-faithful),0.001,6,851,1.03027
+$\kappa\beta$ achievable (PPV-faithful),0.001,6,933,1.03691
+$\kappa\beta$ achievable (PPV-faithful),0.001,6,1015,1.04266
+$\kappa\beta$ achievable (PPV-faithful),0.001,6,1097,1.0477
+$\kappa\beta$ achievable (PPV-faithful),0.001,6,1179,1.05216
+$\kappa\beta$ achievable (PPV-faithful),0.001,6,1261,1.05615
+$\kappa\beta$ achievable (PPV-faithful),0.001,6,1343,1.05974
+$\kappa\beta$ achievable (PPV-faithful),0.001,6,1425,1.063
+$\kappa\beta$ achievable (PPV-faithful),0.001,6,1508,1.066
+$\kappa\beta$ achievable (PPV-faithful),0.001,6,1590,1.06871
+$\kappa\beta$ achievable (PPV-faithful),0.001,6,1672,1.0712
+$\kappa\beta$ achievable (PPV-faithful),0.001,6,1754,1.07351
+$\kappa\beta$ achievable (PPV-faithful),0.001,6,1836,1.07565
+$\kappa\beta$ achievable (PPV-faithful),0.001,6,1918,1.07764
+$\kappa\beta$ achievable (PPV-faithful),0.001,6,2000,1.0795
 Normal approximation,0.001,6,30,0.676168
 Normal approximation,0.001,6,112,0.896803
 Normal approximation,0.001,6,194,0.95609
