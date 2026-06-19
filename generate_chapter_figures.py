@@ -356,6 +356,99 @@ def fig_exact_rc_vs_bounds():
 
 
 # ===========================================================================
+# 6. Extended reach: where the log-domain pipeline works and scipy fails
+# ===========================================================================
+
+def fig_extended_reach(n_panelB: int = 500, snr_panelB: int = 6):
+    """Two panels showing the numerical reach of the log-domain bounds.
+
+    Left: converse rate vs blocklength out to n = 5000 — the log-domain
+    cone-packing converse holds throughout, while the linear scipy NCT and
+    the χ² (ncx2) evaluation hit a NaN wall.  Right: a deep waterfall — the
+    log-domain converse and a deep-grid RCU⁺ track each other down to
+    P_e ≈ 1e-45, while the default-grid RCU⁺ flattens at its ε-floor.
+    """
+    fig, (axA, axB) = plt.subplots(1, 2, figsize=(17, 6.8))
+
+    # ---- Panel A: converse reach in n -----------------------------------
+    ns = np.unique(np.round(np.linspace(50, 5000, 36)).astype(int))
+    snr_db, eps = 6, 1e-6
+    log_c, lin_c, chi_c = [], [], []
+    for n in ns:
+        c = NoncentralTConverse(n=n, snr_db=snr_db)
+        log_c.append(c.converse_rate_log(eps))
+        lin_c.append(c.converse_rate(eps))
+        chi_c.append(ChiSquaredConverse(n=n, snr_db=snr_db).converse_rate(eps))
+    log_c, lin_c, chi_c = map(np.array, (log_c, lin_c, chi_c))
+
+    axA.plot(ns, log_c, "r-", lw=2.6,
+             label="Shannon cone-packing, log-domain (ours)")
+    axA.plot(ns, _safe_positive(lin_c), "b--", lw=1.8, marker="s",
+             markevery=3, ms=5, label="same bound — linear scipy NCT")
+    axA.plot(ns, _safe_positive(chi_c), "g-.", lw=1.8, marker="o",
+             markevery=3, ms=5, label=r"$\chi^2$ relaxation — scipy ncx2")
+
+    def _last_finite_n(vals):
+        finite = ns[np.isfinite(vals) & (vals > 0)]
+        return finite.max() if len(finite) else None
+
+    for vals, color, name in [(lin_c, "b", "linear NCT"),
+                              (chi_c, "g", r"$\chi^2$")]:
+        n_stop = _last_finite_n(vals)
+        if n_stop is not None and n_stop < ns.max():
+            axA.axvline(n_stop, color=color, ls=":", alpha=0.5, lw=1.2)
+            axA.text(n_stop, axA.get_ylim()[0], f"  {name} NaN\n  beyond n≈{n_stop}",
+                     color=color, fontsize=8, va="bottom", rotation=90, alpha=0.8)
+
+    axA.set_xlabel("Block length n", fontsize=12)
+    axA.set_ylabel("Converse rate (bits/channel use)", fontsize=12)
+    axA.set_title(
+        f"Converse reach in n  (SNR = {snr_db} dB, ε = $10^{{-6}}$)\n"
+        "log-domain holds to n = 5000; scipy linear paths hit a NaN wall",
+        fontsize=11)
+    axA.legend(fontsize=10, loc="lower right")
+    axA.grid(True, alpha=0.3)
+
+    # ---- Panel B: deep waterfall (depth in ε) ---------------------------
+    n, snr_db = n_panelB, snr_panelB
+    C = 0.5 * np.log2(1 + 10 ** (snr_db / 10))
+    conv = NoncentralTConverse(n=n, snr_db=snr_db)
+    rcu_deep = RCUAchievable(n=n, snr_db=snr_db, eps_min=1e-100)  # slow build
+    rcu_def = RCUAchievable(n=n, snr_db=snr_db)                   # default 1e-10
+
+    Rs = np.linspace(0.55, 0.985 * C, 42)
+    log10e = np.log10(np.e)
+    eps_conv = 10.0 ** np.array([conv.log_converse_error(R) * log10e for R in Rs])
+    eps_deep = 10.0 ** np.array([rcu_deep.log_achievable_error(R) * log10e for R in Rs])
+    eps_def = 10.0 ** np.array([rcu_def.log_achievable_error(R) * log10e for R in Rs])
+
+    floor = 1e-45
+    axB.semilogy(Rs, _safe_positive(eps_conv), "r-", lw=2.2,
+                 label="Shannon cone-packing converse (log)")
+    axB.semilogy(Rs, _safe_positive(eps_deep), "g-", lw=2.4, marker="^",
+                 markevery=3, ms=5,
+                 label=r"RCU$^+$ achievable — log, $\varepsilon_{\min}=10^{-100}$")
+    axB.semilogy(Rs, _safe_positive(eps_def), "m:", lw=2.0,
+                 label=r"RCU$^+$ — default grid $\varepsilon_{\min}=10^{-10}$")
+    axB.axhspan(floor, 1e-10, color="grey", alpha=0.08)
+    axB.text(Rs[0], 3e-10, "  default-grid floor", fontsize=8, color="grey",
+             va="bottom")
+
+    axB.set_xlabel("Rate R (bits/channel use)", fontsize=12)
+    axB.set_ylabel(r"Error probability  $P_e$", fontsize=12)
+    axB.set_title(
+        f"Deep waterfall  (n = {n}, SNR = {snr_db} dB)\n"
+        "log-domain + deep grid tracks the converse to $P_e\\approx10^{-45}$",
+        fontsize=11)
+    axB.set_ylim(floor, 1)
+    axB.grid(True, which="both", alpha=0.3)
+    axB.legend(fontsize=10, loc="upper right")
+
+    fig.tight_layout()
+    _save(fig, "extended_reach")
+
+
+# ===========================================================================
 # Main
 # ===========================================================================
 
@@ -380,6 +473,9 @@ def main() -> None:
 
     print("\n[5] exact RC vs RCU+ envelope ...")
     fig_exact_rc_vs_bounds()
+
+    print("\n[6] extended reach (log-domain vs scipy NaN wall) ...")
+    fig_extended_reach()
 
     print(f"\nAll figures written to {OUT_DIR}/")
 

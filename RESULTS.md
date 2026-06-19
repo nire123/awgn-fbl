@@ -75,10 +75,12 @@ Computed directly from the library (`NoncentralTConverse.converse_rate_log`,
 **`showcase_waterfall_n500.png`** — error probability `P_e` vs rate `R` at
 `n = 500`, for six SNRs from 0 to 20 dB (one colour each). Dashed = NCT
 converse, solid ○ = RCU⁺, dotted = normal approximation; thin vertical lines
-mark capacity at each SNR. The zoom inset (SNR = 8 dB) shows that the converse
-and RCU⁺ curves are visually indistinguishable down to `P_e ≈ 10⁻¹⁴` — the
+mark capacity at each SNR. The zoom inset (SNR = 8 dB) shows the converse and
+RCU⁺ curves are visually indistinguishable wherever both are drawn — the
 achievability and converse essentially coincide across the whole operating
-range.
+range. (This figure uses the default ε-grid, so the RCU⁺ curves stop at their
+`≈10⁻¹⁰` floor while the converse continues lower; §9 shows a deep-grid RCU⁺
+tracking the converse far past that.)
 
 ---
 
@@ -209,12 +211,37 @@ The numbers above are backed by **180 passing tests** (`pytest tests/`,
 
 ---
 
-## 9. Numerical reach
+## 9. Numerical reach — the fully log-domain pipeline
 
-* The **log-domain NCT converse** is verified accurate to `n = 5000`, well
-  past the `n ≈ 1000` point where scipy's linear `nct.ppf` returns NaN.
-* The **RCU⁺ log-safe path** (`log_achievable_error`, Elkayam factorisation
-  `P = F·J`) stays accurate for `P(R)` far below `10⁻³⁰⁰`, where the linear
-  integral underflows.
-* The **F(R) interpolator** carries ~3.6 ppm error in `log ε`; a 5×
-  grid refinement moves the final RCU⁺ rate by ~10⁻¹⁰ bits/use.
+**Both of our bounds are evaluated entirely in the log domain**, which is what
+lets them keep working where the standard scipy-based evaluations break down.
+The figure below makes the reach explicit.
+
+![extended reach](plots/chapter/extended_reach.png)
+
+**`extended_reach.png`** —
+
+* **Left (reach in n).** The cone-packing converse, evaluated in log-domain
+  (`converse_rate_log` → `log_nct_cdf`, the integral form
+  `E_X[Φ(x·√(X/df) − nc)]`), holds smoothly out to **n = 5000**.  The *same
+  bound* via scipy's linear `nct.ppf`, and the χ² relaxation via `ncx2.ppf`,
+  both hit a **NaN wall** at far smaller n (vertical markers) — scipy's
+  routines underflow internally.
+* **Right (depth in ε).** A deep waterfall at n = 500, SNR = 6 dB.  The
+  log-domain converse and a **deep-grid RCU⁺** (`eps_min = 10⁻¹⁰⁰`) track each
+  other down to `P_e ≈ 10⁻⁴⁵`, while the **default-grid RCU⁺** flattens at its
+  ε-floor (grey band).
+
+The two bounds differ slightly in *how* the log domain buys reach:
+
+| Bound | Log-domain mechanism | Reach |
+|---|---|---|
+| **Converse** (cone-packing) | `log_nct_cdf` integral representation on a log-uniform χ²-grid + log-domain Lemma 1 | Essentially unlimited — verified to `n = 5000`, `ε` far below `10⁻³⁰⁰`, out of the box. |
+| **RCU⁺** (achievable) | Elkayam factorisation `log P = log F(R) + log J(R)`, two well-conditioned terms | Set by the depth of the converse curve `F(R)` it integrates: the default grid floors at `ε = 10⁻¹⁰`; pass `RCUAchievable(..., eps_min=1e-100)` to reach the deep tail (the converse feeding it is accurate that far). |
+
+* **scipy's `nct.logcdf` / `ncx2.logcdf` are not log-stable** — they are
+  computed as `log(cdf(x))` and inherit the linear underflow.  The library's
+  `log_nct_cdf` stays in the log domain throughout, which is the whole reason
+  the converse reaches where it does.
+* The **F(R) interpolator** carries ~3.6 ppm error in `log ε`; a 5× grid
+  refinement moves the final RCU⁺ rate by ~10⁻¹⁰ bits/use.

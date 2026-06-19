@@ -68,18 +68,42 @@ class RCUAchievable:
     The class offers a *simple* linear evaluation (``achievable_error``,
     ``achievable_rate``) and a *log-safe* evaluation via the Elkayam
     factorisation `P(R) = F(R) · J(R)` (``log_achievable_error``,
-    ``achievable_rate_v2``).  The two agree in their shared regime;
-    the log-safe path stays accurate when `P(R)` is far below machine
+    ``achievable_rate_v2``).  The two agree in their shared regime; the
+    log-safe path keeps `log P(R)` well-conditioned far below machine
     precision in linear space.
+
+    **Deep-tail reach.**  The bound's reach is set by the depth of the
+    converse curve `F(R)` it integrates: the log-safe path can only report
+    error probabilities as small as the smallest ε on the
+    :class:`~awgn_fbl.fast_f.FastFREvaluator` grid.  The default grid floors
+    at ``eps_min = 1e-10``; pass a smaller ``eps_min`` to reach further into
+    the tail (the underlying log-domain converse stays accurate essentially
+    arbitrarily deep, so the only cost is a larger — and slower to build —
+    grid).  With e.g. ``eps_min=1e-100`` the RCU⁺ waterfall tracks the
+    converse down to `P_e ≈ 10⁻¹⁰⁰`.
+
+    Parameters
+    ----------
+    n, snr_db : int, float
+        Blocklength and SNR (dB).
+    method : str
+        Converse method for the F-grid (``'nct'`` default; ``'chi2'``).
+    eps_start, eps_factor, eps_min : float
+        Forwarded to :class:`~awgn_fbl.fast_f.FastFREvaluator`; control the
+        ε-grid extent.  Lower ``eps_min`` for deeper-tail reach.
+    verbose : bool
+        Print F-grid precomputation progress.
     """
 
     def __init__(self, n: int, snr_db: float, *, method: str = "nct",
-                 verbose: bool = False):
+                 eps_start: float = 1 - 1e-10, eps_factor: float = 0.1,
+                 eps_min: float = 1e-10, verbose: bool = False):
         self.n = n
         self.snr_db = snr_db
         self.verbose = verbose
         self.F_eval = FastFREvaluator(n=n, snr_db=snr_db, method=method,
-                                      verbose=verbose)
+                                      eps_start=eps_start, eps_factor=eps_factor,
+                                      eps_min=eps_min, verbose=verbose)
 
     # ------------------------------------------------------------------
     # Simple linear-domain path

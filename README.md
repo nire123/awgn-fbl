@@ -200,12 +200,32 @@ Suite runs in 5–10 minutes.
 
 ---
 
-## Numerical notes
+## Numerical notes — a fully log-domain pipeline
 
-* **NCT converse** linear path is stable for `n ≲ 1000` at `SNR ≲ 6 dB`; the log-domain path extends this to arbitrarily large n (verified to n = 5000).
-* **scipy's `nct.logcdf` / `ncx2.logcdf` are not log-stable** — they are implemented as `log(cdf(x))` and inherit the underflow.  The library's `log_nct_cdf` uses the integral representation `E_X[Φ(x·√(X/df) − nc)]` on a log-uniform X-grid and stays accurate where scipy fails.
-* **RCU⁺ integral** uses the factorisation `P(R) = F(R) · J(R)` with `J ∈ [1, 1/F(R)]`; `log P(R)` is then `log F(R) + log J(R)`, two well-conditioned terms.
-* **F evaluator** uses PCHIP interpolation in log(ε) on a geometric grid (~220 points by default, factor 0.9 per step).  Empirical error: ~3.6 ppm in log(ε); a 5× refinement of the grid changes the final RCU⁺ rate by ~10⁻¹⁰ bits/use.
+**Both of our bounds are evaluated entirely in the log domain.**  That is what
+lets them keep working far outside the range where scipy's linear `nct` / `ncx2`
+routines return NaN.  `plots/chapter/extended_reach.png` demonstrates it: the
+cone-packing converse holds to **n = 5000** while scipy's linear paths hit a NaN
+wall, and a deep-grid RCU⁺ tracks the converse down to `P_e ≈ 10⁻⁴⁵`.
+
+![extended reach](plots/chapter/extended_reach.png)
+
+* **Converse** (cone-packing) — `converse_rate_log` never touches `nct.ppf`.
+  scipy's `nct.logcdf` / `ncx2.logcdf` are *not* log-stable (implemented as
+  `log(cdf(x))`, so they inherit the underflow).  The library's `log_nct_cdf`
+  uses the integral representation `E_X[Φ(x·√(X/df) − nc)]` on a log-uniform
+  X-grid and stays accurate where scipy fails — verified to **n = 5000** and
+  `ε` far below `10⁻³⁰⁰`, out of the box.
+* **RCU⁺** (achievable) — the Elkayam factorisation `P(R) = F(R) · J(R)` with
+  `J ∈ [1, 1/F(R)]` gives `log P(R) = log F(R) + log J(R)`, two well-conditioned
+  terms.  Its deep-tail reach is set by the depth of the converse curve `F(R)`
+  it integrates: the default grid floors at `ε = 10⁻¹⁰`; construct
+  `RCUAchievable(n, snr_db, eps_min=1e-100)` to reach the deep tail (the
+  log-domain converse feeding it is accurate that far).
+* **F evaluator** uses PCHIP interpolation in log(ε) on a geometric grid (~220
+  points by default, factor 0.9 per step).  Empirical error: ~3.6 ppm in
+  log(ε); a 5× refinement of the grid changes the final RCU⁺ rate by ~10⁻¹⁰
+  bits/use.
 
 ---
 

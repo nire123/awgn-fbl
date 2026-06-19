@@ -56,9 +56,9 @@ CURVE_STYLES = {
     "capacity":      {"color": "k",      "ls": "-",  "lw": 2.5, "marker": None,
                       "label": "Shannon capacity"},
     "converse_nct":  {"color": "r",      "ls": "-",  "lw": 2,   "marker": "o",
-                      "label": "NCT converse (ours)"},
+                      "label": "Shannon cone-packing converse"},
     "converse_chi2": {"color": "b",      "ls": "--", "lw": 2,   "marker": "s",
-                      "label": r"$\chi^2$ converse (Polyanskiy)"},
+                      "label": r"$\chi^2$ converse (Polyanskiy, relaxed $Q_Y$)"},
     "rcu":           {"color": "g",      "ls": "-",  "lw": 2.5, "marker": "^",
                       "label": "RCU$^+$ achievable (ours)"},
     "kappabeta":     {"color": "m",      "ls": "--", "lw": 1.5, "marker": "D",
@@ -116,7 +116,7 @@ def _rate_for(curve: str, *, n: int, snr_db: float, epsilon: float,
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
                 cache[key] = RCUAchievable(n=n, snr_db=snr_db)
-        return cache[key].achievable_rate(epsilon)
+        return cache[key].achievable_rate_v2(epsilon)  # log-safe path
     if curve == "kappabeta":
         return KappaBetaAchievable(n=n, snr_db=snr_db).achievable_rate(epsilon)
     if curve == "kappabeta_ppv":
@@ -143,7 +143,7 @@ def _error_for(curve: str, *, n: int, snr_db: float, rate_bits: float,
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
                 cache[key] = RCUAchievable(n=n, snr_db=snr_db)
-        return cache[key].achievable_error(rate_bits)
+        return cache[key].achievable_error_v2(rate_bits)  # log-safe path
     if curve == "gallager":
         return GallagerAchievable(n=n, snr_db=snr_db).achievable_error(rate_bits)
     if curve == "normal":
