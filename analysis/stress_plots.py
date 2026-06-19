@@ -30,8 +30,8 @@ from awgn_fbl.plot import plot, ALL_CURVES, ERROR_CURVES
 
 OUT = "plots/stress"
 
-RATE_CURVES = ["capacity", "converse_nct", "rcu", "gallager",
-               "kappabeta_v2", "normal"]
+RATE_CURVES = ["capacity", "converse_nct", "converse_chi2", "rcu", "gallager",
+               "kappabeta_ppv", "normal"]
 ERR_CURVES = [c for c in ALL_CURVES if c in ERROR_CURVES]
 INV_CURVES = ["converse_nct", "rcu", "gallager", "normal"]
 

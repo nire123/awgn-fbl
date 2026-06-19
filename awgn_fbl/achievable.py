@@ -565,10 +565,18 @@ class GallagerAchievable:
             0.5 + A2 / 4 + 0.5 * np.sqrt(1 + A2 ** 2 / 4)
         )
 
-    def _gallager_pe(self, R_bits: float) -> float:
-        """Gallager's upper bound on `P_e` at rate R (bits/channel use)."""
+    def log_achievable_error(self, R_bits: float) -> float:
+        """Natural log of Gallager's bound on `P_e` at rate R (clamped at log 1).
+
+        The bound is an exponential, `P_e ≤ μ(n,ρ)·exp(−n·E_r)`, so its log is
+        ``log μ − n·E_r`` directly — the dominant ``−n·E_r`` term never has to
+        be exponentiated, and the prefactor ``μ`` is a *central* χ² CDF
+        difference near the mean (well-conditioned, no underflow).  This keeps
+        the bound exact arbitrarily deep in the tail, where the linear form
+        underflows to 0.
+        """
         if R_bits <= 0:
-            return 0.0
+            return -np.inf
         n = self.n
         A = self.A
         A2 = A ** 2
@@ -602,25 +610,38 @@ class GallagerAchievable:
         lo = stats.chi2.cdf(n - deltap, df=n)
         mu = hi - lo
         if mu <= 0:
-            return 1.0
+            return 0.0                       # P_e bound = 1
 
-        multip = 2 * np.exp(s * deltap) / mu
-        return min(multip * np.exp(-n * Er), 1.0)
+        log_multip = np.log(2.0) + s * deltap - np.log(mu)
+        return float(min(log_multip - n * Er, 0.0))
+
+    def _gallager_pe(self, R_bits: float) -> float:
+        """Gallager's upper bound on `P_e` at rate R (linear; 0 on underflow)."""
+        log_pe = self.log_achievable_error(R_bits)
+        if log_pe == -np.inf or log_pe < -745.0:
+            return 0.0
+        return float(np.exp(log_pe))
 
     def achievable_rate(self, epsilon: float, tol: float = 1e-4) -> float:
-        """Largest R for which Gallager guarantees `P_e ≤ ε`."""
+        """Largest R for which Gallager guarantees `P_e ≤ ε`.
+
+        Bisection is done on ``log P_e`` vs ``log ε`` so the search stays
+        correct for ε far below machine precision (the linear form silently
+        underflowed to 0 there and returned over-optimistic rates).
+        """
         if not 0 < epsilon < 1:
             raise ValueError("epsilon must be in (0, 1)")
 
+        log_eps = np.log(epsilon)
         R_up = self.capacity
         R_down = 0.0
-        if self._gallager_pe(R_down) > epsilon:
+        if self.log_achievable_error(R_down) > log_eps:
             return 0.0
 
         precision = tol * R_up
         while (R_up - R_down) > precision:
             R_mid = 0.5 * (R_up + R_down)
-            if self._gallager_pe(R_mid) < epsilon:
+            if self.log_achievable_error(R_mid) < log_eps:
                 R_down = R_mid
             else:
                 R_up = R_mid

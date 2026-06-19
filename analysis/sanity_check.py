@@ -92,19 +92,20 @@ def load_all() -> list[dict[str, Any]]:
 # ---------------------------------------------------------------------------
 
 CONVERSE = {"converse_nct", "converse_chi2", "capacity"}
-ACHIEVABLE = {"rcu", "kappabeta", "kappabeta_v2", "gallager"}
+ACHIEVABLE = {"rcu", "kappabeta", "kappabeta_ppv", "gallager"}
 APPROX = {"normal"}
 
 
-# Curve label → internal id (labels are what matplotlib shows in the legend).
+# Curve label → internal id (labels are what matplotlib shows in the legend);
+# must stay in sync with ``awgn_fbl.plot.CURVE_STYLES``.
 LABEL_TO_ID = {
     "Shannon capacity": "capacity",
-    "NCT converse (ours)": "converse_nct",
-    r"$\chi^2$ converse (Polyanskiy)": "converse_chi2",
-    "RCU+ achievable (ours)": "rcu",
-    r"$\kappa\beta$ achievable v1 (max err)": "kappabeta",
-    r"$\kappa\beta$ achievable v2 (max err)": "kappabeta_v2",
-    "Gallager achievable (avg err)": "gallager",
+    "Shannon cone-packing converse": "converse_nct",
+    r"$\chi^2$ converse (Polyanskiy, relaxed $Q_Y$)": "converse_chi2",
+    "RCU$^+$ achievable (ours)": "rcu",
+    r"$\kappa\beta$ achievable (simple)": "kappabeta",
+    r"$\kappa\beta$ achievable (PPV-faithful)": "kappabeta_ppv",
+    "Gallager achievable": "gallager",
     "Normal approximation": "normal",
 }
 
@@ -192,10 +193,10 @@ def check_s2_below_capacity(plot) -> list[str]:
 def check_s3_kb_v1_v2_agree(plot, tol: float = 0.02) -> list[str]:
     """S3: κβ v1 and v2 should agree (same formulas, different numerics)."""
     curves = {_curve_id(k): v for k, v in plot["curves"].items()}
-    if "kappabeta" not in curves or "kappabeta_v2" not in curves:
+    if "kappabeta" not in curves or "kappabeta_ppv" not in curves:
         return []
     x1, y1 = curves["kappabeta"]["xs"], curves["kappabeta"]["ys"]
-    x2, y2 = curves["kappabeta_v2"]["xs"], curves["kappabeta_v2"]["ys"]
+    x2, y2 = curves["kappabeta_ppv"]["xs"], curves["kappabeta_ppv"]["ys"]
     if not np.array_equal(x1, x2):
         return []
     violations = []
@@ -362,7 +363,7 @@ def build_summary_table() -> list[dict]:
 
                 # best achievable bound at this point
                 achs = {k: v for k, v in
-                        [("rcu", rcu), ("gallager", gal), ("kappabeta_v2", kb)]
+                        [("rcu", rcu), ("gallager", gal), ("kappabeta_ppv", kb)]
                         if np.isfinite(v)}
                 best_ach = max(achs.values()) if achs else np.nan
                 best_ach_name = (
@@ -376,7 +377,7 @@ def build_summary_table() -> list[dict]:
                     "nct": round(nct, 4) if np.isfinite(nct) else "nan",
                     "chi2": round(chi2, 4) if np.isfinite(chi2) else "nan",
                     "rcu": round(rcu, 4) if np.isfinite(rcu) else "nan",
-                    "kappabeta_v2": round(kb, 4) if np.isfinite(kb) else "nan",
+                    "kappabeta_ppv": round(kb, 4) if np.isfinite(kb) else "nan",
                     "gallager": round(gal, 4) if np.isfinite(gal) else "nan",
                     "normal": round(nap, 4) if np.isfinite(nap) else "nan",
                     "best_ach": best_ach_name,
