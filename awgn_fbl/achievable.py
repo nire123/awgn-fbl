@@ -37,7 +37,7 @@ All bounds use the same ``(n, snr_db)`` construction signature.
 from __future__ import annotations
 
 import numpy as np
-from scipy import integrate, optimize, stats
+from scipy import integrate, optimize, special, stats
 
 from ._pairwise import log_pairwise_error_prob_vec
 from .converse import NoncentralTConverse
@@ -51,6 +51,91 @@ __all__ = [
     "GallagerAchievable",
     "ExactRandomCoding",
 ]
+
+
+# ---------------------------------------------------------------------------
+# Log-domain non-central χ² lower-tail CDF (used by the κβ β_q term)
+# ---------------------------------------------------------------------------
+
+def _log_reg_lower_gamma(a: float, z: float) -> float:
+    """``log P(a, z)`` — regularised lower incomplete gamma, log-stable.
+
+    Uses the always-convergent series
+    ``P(a,z) = e^{-z + a ln z - lnΓ(a)} · Σ_{m≥0} z^m / ∏_{i=0}^{m}(a+i)``.
+    The leading factor carries the magnitude in log domain, so the result is
+    finite even where ``P(a,z)`` underflows to 0 in linear arithmetic.
+    """
+    if z <= 0:
+        return -np.inf
+    term = 1.0 / a
+    total = term
+    m = 1
+    while m < 100_000:
+        term *= z / (a + m)
+        total += term
+        if abs(term) <= 1e-17 * total:
+            break
+        m += 1
+    return float(-z + a * np.log(z) - special.gammaln(a) + np.log(total))
+
+
+def _log_ncx2_cdf_series(x: float, df: float, nc: float,
+                         drop: float = 50.0, max_terms: int = 200_000) -> float:
+    """``log F_ncx2(x; df, nc)`` via a Poisson mixture of central χ² lower tails.
+
+    ``F(x;k,λ) = Σ_j e^{-λ/2}(λ/2)^j / j! · P(k/2 + j, x/2)`` — a Poisson(λ/2)
+    mixture of regularised lower incomplete gammas, summed in log domain.
+    Stays finite arbitrarily deep in the lower tail, where scipy's
+    ``ncx2.cdf`` / ``ncx2.logcdf`` return ``0`` / ``-inf``.
+
+    The summand ``f(j) = logPoisson(j) + logP(k/2+j, x/2)`` is unimodal but its
+    peak is **not** at the Poisson mean ``λ/2``: deep in the lower tail it sits
+    near the saddle ``j(k/2 + j) ≈ (λ/2)(x/2)``.  We seed at that estimate,
+    hill-climb to the true peak, and sum outward until the terms fall ``drop``
+    nats below it.
+    """
+    if x <= 0:
+        return -np.inf
+    a0 = df / 2.0
+    z = x / 2.0
+    mu = nc / 2.0
+    if mu <= 0:                                   # central χ²
+        return _log_reg_lower_gamma(a0, z)
+    log_mu = np.log(mu)
+
+    def f(j: int) -> float:
+        if j < 0:
+            return -np.inf
+        log_pois = -mu + j * log_mu - special.gammaln(j + 1.0)
+        return log_pois + _log_reg_lower_gamma(a0 + j, z)
+
+    j_star = int(round(0.5 * (-a0 + np.sqrt(a0 * a0 + 4.0 * mu * z))))
+    j = max(0, j_star)
+    fj = f(j)
+    while f(j + 1) > fj:                           # climb up
+        j += 1
+        fj = f(j)
+    while j > 0 and f(j - 1) > fj:                 # climb down
+        j -= 1
+        fj = f(j)
+
+    peak, f_peak = j, fj
+    terms = [f_peak]
+    jj = peak + 1
+    while jj < peak + max_terms:
+        v = f(jj)
+        if v < f_peak - drop:
+            break
+        terms.append(v)
+        jj += 1
+    jj = peak - 1
+    while jj >= 0:
+        v = f(jj)
+        if v < f_peak - drop:
+            break
+        terms.append(v)
+        jj -= 1
+    return float(special.logsumexp(terms))
 
 
 # ===========================================================================
@@ -274,24 +359,57 @@ class _KappaBetaBase:
         self.A = np.sqrt(self.P)
 
     def _kappa_inf(self, tau: float) -> float:
-        """Asymptotic κ(τ).  Matches Polyanskiy's ``kappa_inf.m``."""
+        """Asymptotic κ(τ).  Matches Polyanskiy's ``kappa_inf.m``.
+
+        Evaluated through ``erfinv`` / ``erf`` rather than
+        ``norm.ppf((τ+1)/2)`` / ``2·norm.cdf(·)−1``: the latter both lose τ to
+        rounding for τ ≲ 10⁻¹⁶ (``(τ+1)/2`` collapses to ``0.5``), which made
+        κ = 0 and the whole bound NaN at very small ε.  The error-function
+        forms take the small argument directly.
+        """
         if tau <= 0 or tau >= 1:
             return 0.0
         P = self.P
-        x0 = stats.norm.ppf((tau + 1) / 2)
+        x0 = np.sqrt(2.0) * special.erfinv(tau)        # = norm.ppf((τ+1)/2)
         VP = 2 * (1 + 2 * P)
         VQ = 2 * (1 + P) ** 2
-        return 2 * stats.norm.cdf(np.sqrt(VP / VQ) * x0) - 1
+        return special.erf(np.sqrt(VP / VQ) * x0 / np.sqrt(2.0))  # = 2Φ(·)−1
 
-    def _betaq_upper(self, q: float) -> float:
-        """Upper bound on ``log₂ β_q``.  Implementation provided by subclass."""
+    def _betaq_upper(self, p_up: float) -> float:
+        """Upper bound on ``log₂ β_q`` from the *upper-tail* probability
+        ``p_up = 1 - q``.  Implementation provided by subclass."""
         raise NotImplementedError
+
+    @staticmethod
+    def _log_ncx2_cdf(x: float, df: float, nc: float) -> float:
+        """Natural-log non-central χ² lower-tail CDF, log-safe in the tail.
+
+        Uses ``ncx2.cdf`` while it is positive and ``ncx2.logcdf`` once it
+        underflows; deep in the lower tail scipy's ``logcdf`` itself returns
+        ``-inf`` (it is ``log(cdf)`` under the hood), in which case a
+        Poisson-mixture series over central χ² lower tails is used —
+        ``F(x;k,λ) = Σ_j e^{-λ/2}(λ/2)^j/j! · P(j+k/2, x/2)`` with each
+        regularised lower incomplete gamma evaluated in log domain.
+        """
+        val = stats.ncx2.cdf(x, df=df, nc=nc)
+        if val > 0:
+            return float(np.log(val))
+        log_val = stats.ncx2.logcdf(x, df=df, nc=nc)
+        if np.isfinite(log_val):
+            return float(log_val)
+        return _log_ncx2_cdf_series(x, df, nc)
 
     def achievable_rate(self, epsilon: float, n_tau: int = 40) -> float:
         """κβ achievable rate, ``bits/channel use``.
 
         Matches ``kappabeta_ach.m`` with asymptotic κ (Polyanskiy's
         ``hack = 1`` default).  Optimised over τ ∈ (0, ε).
+
+        The β term is evaluated in *complementary* (upper-tail) probability
+        ``p_up = ε - τ`` throughout: passing ``q = 1 - ε + τ`` to ``ncx2.ppf``
+        loses ε to rounding once ε ≲ 10⁻¹⁶ (``q`` collapses to ``1.0`` and
+        ``ppf`` returns ``inf``), which is what made the bound NaN at large
+        n / high SNR / small ε.  The complementary form stays exact.
         """
         if not 0 < epsilon < 1:
             raise ValueError("epsilon must be in (0, 1)")
@@ -304,8 +422,10 @@ class _KappaBetaBase:
             kappa = self._kappa_inf(tau)
             if kappa <= 0:
                 continue
-            q = min(1 - epsilon + tau, 1 - 1e-10)
-            lbeta = self._betaq_upper(q)
+            p_up = epsilon - tau  # = 1 - q, the upper-tail probability
+            if p_up <= 0:
+                continue
+            lbeta = self._betaq_upper(p_up)
             if not np.isfinite(lbeta):
                 continue
             log_M_values.append(np.log2(kappa) - lbeta)
@@ -318,21 +438,22 @@ class _KappaBetaBase:
 class KappaBetaAchievable(_KappaBetaBase):
     """Simple reference port of Polyanskiy's κβ achievability.
 
-    Uses a one-shot ``ncx2.ppf`` quantile for the β upper bound, with an
-    additive correction term of order ε·eps_machine (the correction one
-    would expect from the discreteness of the quantile function).  Slightly
-    less accurate than :class:`KappaBetaAchievablePPV` in extreme regimes,
-    but considerably simpler code and a useful cross-check for the
-    faithful version.
+    Uses a one-shot non-central χ² quantile (via the inverse survival
+    function) for the β upper bound, with an additive correction term of
+    order ε·eps_machine from the discreteness of the quantile.  Simpler than
+    :class:`KappaBetaAchievablePPV`, and a useful cross-check.
 
     Applies to the *maximal* error probability `ε* = max_m P_e(m)`.
     """
 
-    def _betaq_upper(self, q: float) -> float:
+    def _betaq_upper(self, p_up: float) -> float:
         A = self.A
         n = self.n
+        nc_p = n / A ** 2
 
-        pp0 = stats.ncx2.ppf(q, df=n, nc=n / A ** 2)
+        # Quantile via the inverse survival function — p_up is the small
+        # upper-tail probability, so no 1 - ε cancellation.
+        pp0 = stats.ncx2.isf(p_up, df=n, nc=nc_p)
         if np.isnan(pp0) or np.isinf(pp0):
             return -np.inf
 
@@ -344,47 +465,60 @@ class KappaBetaAchievable(_KappaBetaBase):
         qq0 = ((1 + A ** 2) * n - gammatil) / ((1 + A ** 2) * A ** 2)
         delta_q = n * (1 + 1 / A ** 2)
 
-        term1 = stats.ncx2.cdf(qq0, df=n, nc=delta_q)
-        if term1 <= 0:
+        log_term1 = self._log_ncx2_cdf(qq0, n, delta_q)   # natural log
+        if not np.isfinite(log_term1):
             return -lgamma
 
-        delta = q - stats.ncx2.cdf(pp0, df=n, nc=n / A ** 2)
-        term2 = max(0, delta - 2 * q * np.finfo(float).eps) * 2 ** (-lgamma)
-        return np.log2(term1 + term2)
+        log2_term1 = log_term1 * np.log2(np.e)
+        if log_term1 <= -700:                 # term1 underflows; correction is
+            return log2_term1                 # negligible, report log2(term1)
+
+        # Discreteness correction δ = q - F(pp0) = SF(pp0) - p_up, an
+        # O(machine-ε) term added in linear space.
+        delta = stats.ncx2.sf(pp0, df=n, nc=nc_p) - p_up
+        q = 1.0 - p_up
+        term2 = max(0.0, delta - 2 * q * np.finfo(float).eps) * 2 ** (-lgamma)
+        return float(np.log2(np.exp(log_term1) + term2))
 
 
 class KappaBetaAchievablePPV(_KappaBetaBase):
     """Faithful port of Polyanskiy's ``kappabeta_ach.m`` + ``betaq_up_v2.m``.
 
-    The β upper bound uses Newton iteration on the ncx² quantile ``pp0``
-    until ``ncx2.cdf(pp0) ≥ q`` (an "overshoot" variant of the quantile),
-    then reports ``log₂(term1)`` with no additive correction.  A log-scale
-    ``ncx2.logcdf`` fallback is used when ``term1`` underflows.  This is
-    the reference implementation one should compare against when
-    reproducing Polyanskiy's published numbers.
+    The β upper bound Newton-iterates the non-central χ² quantile ``pp0``
+    until ``SF(pp0) ≤ p_up`` (an "overshoot" variant), then reports
+    ``log₂(term1)``.  All quantile work is done in the *upper tail* (``isf`` /
+    ``sf``) so the small target probability ``p_up = ε − τ`` never has to be
+    formed as ``1 − (…)``, and ``term1`` is evaluated by
+    :meth:`_log_ncx2_cdf`, which stays finite deep in the lower tail.  These
+    two changes remove the NaNs the original MATLAB-style code produced at
+    large n / high SNR / small ε, while matching it exactly where scipy's
+    ``ncx2`` is well-behaved.
 
     Applies to the *maximal* error probability `ε* = max_m P_e(m)`.
     """
 
-    def _betaq_upper(self, q: float, max_iter: int = 50) -> float:
+    def _betaq_upper(self, p_up: float, max_iter: int = 50) -> float:
         A = self.A
         n = self.n
         A2 = A ** 2
+        nc_p = n / A2
 
-        # Step 1: Newton-iterate pp0 upward until CDF ≥ q
-        pp0 = stats.ncx2.ppf(q, df=n, nc=n / A2)
+        # Step 1: quantile via the inverse survival function — p_up is the
+        # small upper-tail probability 1 - q, so no 1 - ε rounding.
+        pp0 = stats.ncx2.isf(p_up, df=n, nc=nc_p)
         if np.isnan(pp0) or np.isinf(pp0):
             return np.inf
 
+        # Newton-iterate pp0 upward until SF(pp0) ≤ p_up (overshoot variant of
+        # the quantile), all in the upper tail to avoid cancellation.
         for _ in range(max_iter):
-            pgam = stats.ncx2.cdf(pp0, df=n, nc=n / A2)
-            if pgam >= q:
+            sf_val = stats.ncx2.sf(pp0, df=n, nc=nc_p)
+            if sf_val <= p_up:
                 break
-            delta = q - pgam
-            pdf_val = stats.ncx2.pdf(pp0, df=n, nc=n / A2)
+            pdf_val = stats.ncx2.pdf(pp0, df=n, nc=nc_p)
             if pdf_val <= 0:
                 break
-            pp0 = pp0 + delta / pdf_val
+            pp0 = pp0 + (sf_val - p_up) / pdf_val
 
         # Step 2: change of measure pp0 → qq0
         gammatil = (1 + A2) * n - A2 * pp0
@@ -394,17 +528,12 @@ class KappaBetaAchievablePPV(_KappaBetaBase):
         )
         qq0 = ((1 + A2) * n - gammatil) / ((1 + A2) * A2)
 
-        # Step 3: term1 under the output measure Q_Y
-        term1 = stats.ncx2.cdf(qq0, df=n, nc=n * (1 + 1 / A2))
-        if term1 > 0:
-            return np.log2(term1)
-
-        # Step 4: log-scale fallback when linear underflows
-        log_term1 = stats.ncx2.logcdf(qq0, df=n, nc=n * (1 + 1 / A2))
+        # Step 3: log term1 under the output measure Q_Y, robust in the tail.
+        log_term1 = self._log_ncx2_cdf(qq0, n, n * (1 + 1 / A2))   # natural log
         if np.isfinite(log_term1):
             return log_term1 * np.log2(np.e)
 
-        # Last-resort: use the NP threshold alone
+        # Last-resort: the NP threshold alone.
         return -lgamma
 
 
