@@ -34,6 +34,7 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
 from awgn_fbl import (
     ChiSquaredConverse,
+    ErsegheConverse,
     ExactRandomCoding,
     GallagerAchievable,
     KappaBetaAchievablePPV,
@@ -71,8 +72,13 @@ def _safe_positive(arr: np.ndarray) -> np.ndarray:
 
 
 def _polyanskiy_chi2_rate(n: int, snr_db: float, eps: float) -> float:
-    """Polyanskiy's χ² convention: `log M` at dim `n+1`, rate divided by `n`."""
-    r = ChiSquaredConverse(n=n + 1, snr_db=snr_db).converse_rate(eps)
+    """Polyanskiy's χ² convention: `log M` at dim `n+1`, rate divided by `n`.
+
+    Evaluated via Erseghe's robust Temme method (exact match to scipy ncx2
+    where it works, finite past its NaN wall) so the mismatch curves stay
+    complete at large n / high SNR.
+    """
+    r = ErsegheConverse(n=n + 1, snr_db=snr_db).converse_rate(eps)
     return r * (n + 1) / n
 
 

@@ -49,6 +49,7 @@ from .achievable import (
     KappaBetaAchievablePPV,
     RCUAchievable,
 )
+from .erseghe import ErsegheConverse
 from .normal_approx import normal_approx_error, normal_approx_rate
 from .fast_f import FastFREvaluator
 from ._pairwise import (
@@ -77,7 +78,8 @@ __all__ = [
     "shannon_capacity", "awgn_dispersion",
     # converse
     "AWGNConverseBase", "NoncentralTConverse", "ChiSquaredConverse",
-    "SolidAngleConverse", "awgn_converse_rate", "awgn_converse_error",
+    "SolidAngleConverse", "ErsegheConverse",
+    "awgn_converse_rate", "awgn_converse_error",
     # achievable
     "RCUAchievable", "KappaBetaAchievable", "KappaBetaAchievablePPV",
     "GallagerAchievable", "ExactRandomCoding",

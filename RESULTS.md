@@ -133,11 +133,18 @@ rate, for converse / RCU⁺ / normal approximation.
 ## 5. Converse optimality — cone-packing vs Polyanskiy's relaxed χ²
 
 The NCT converse here **is** Shannon's 1959 cone-packing bound — the optimal
-AWGN converse (and the PPV meta-converse with the channel-optimal output
-distribution; Erseghe 2015). A commonly-used *relaxed* form instead takes the
-output measure `Q_Y = N(0,(1+P)·I)`, which is **not** β-optimal. These figures
-quantify how much rate that relaxation gives up relative to the optimal
-cone-packing (Lemma 1 / NCT) converse, `R_χ² − R_NCT`.
+AWGN converse (the PPV meta-converse at its minimax saddle point; Polyanskiy
+2013). A commonly-used *relaxed* form instead takes the output measure
+`Q_Y = N(0,(1+P)·I)`, which is **not** β-optimal. These figures quantify how
+much rate that relaxation gives up relative to the optimal cone-packing
+(Lemma 1 / NCT) converse, `R_χ² − R_NCT`.
+
+> The relaxed χ² curve is evaluated with **Erseghe's (2015) Temme method**
+> (`ErsegheConverse`), which agrees with scipy `ncx2` to ~10⁻¹² where scipy
+> works and stays finite past its NaN wall — so the mismatch curves remain
+> complete at large n / high SNR.  Erseghe's paper evaluates exactly this
+> *relaxed* bound (it is not the optimal cone-packing one); its claimed
+> equivalence to Shannon's bound is the asymptotic/minimax statement above.
 
 ### vs SNR (ε = 10⁻³, several blocklengths)
 

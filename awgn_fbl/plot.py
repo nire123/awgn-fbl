@@ -45,6 +45,7 @@ from .achievable import (
     RCUAchievable,
 )
 from .converse import ChiSquaredConverse, NoncentralTConverse
+from .erseghe import ErsegheConverse
 from .normal_approx import normal_approx_error, normal_approx_rate
 
 
@@ -74,7 +75,8 @@ CURVE_STYLES = {
 ALL_CURVES = list(CURVE_STYLES.keys())
 
 # Curves that also support the R → ε direction
-ERROR_CURVES = {"converse_nct", "rcu", "normal", "gallager", "capacity"}
+ERROR_CURVES = {"converse_nct", "converse_chi2", "rcu", "normal", "gallager",
+                "capacity"}
 
 
 # ===========================================================================
@@ -109,7 +111,9 @@ def _rate_for(curve: str, *, n: int, snr_db: float, epsilon: float,
     if curve == "converse_nct":
         return NoncentralTConverse(n=n, snr_db=snr_db).converse_rate_log(epsilon)
     if curve == "converse_chi2":
-        return ChiSquaredConverse(n=n, snr_db=snr_db).converse_rate(epsilon)
+        # Erseghe's robust Temme evaluation of the relaxed (Q_Y) PPV converse —
+        # exact agreement with scipy ncx2 where it works, finite past its NaN wall.
+        return ErsegheConverse(n=n, snr_db=snr_db).converse_rate(epsilon)
     if curve == "rcu":
         key = ("rcu", n, snr_db)
         if key not in cache:
@@ -137,6 +141,8 @@ def _error_for(curve: str, *, n: int, snr_db: float, rate_bits: float,
         return 0.0 if rate_bits < C else 1.0
     if curve == "converse_nct":
         return NoncentralTConverse(n=n, snr_db=snr_db).converse_error_log(rate_bits)
+    if curve == "converse_chi2":
+        return ErsegheConverse(n=n, snr_db=snr_db).converse_error(rate_bits)
     if curve == "rcu":
         key = ("rcu", n, snr_db)
         if key not in cache:

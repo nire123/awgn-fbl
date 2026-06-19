@@ -1,15 +1,20 @@
 """
 Converse (upper) bounds on the maximum coding rate for the AWGN channel.
 
-All three classes evaluate **Shannon's 1959 cone-packing converse** — the
-optimal converse for the AWGN channel.  For an equal-power (spherical)
-codebook the maximum-likelihood decision regions are circular cones around
-each codeword, and the error probability of the best code is exactly a
-non-central t tail.  Polyanskiy–Poor–Verdú's meta-converse, evaluated with
-the channel-optimal output distribution, coincides with this cone-packing
-bound for the AWGN channel (Erseghe, IEEE TIT 2015, arXiv:1401.7169).  The
-contribution here is numerical: a robust log-domain evaluation that stays
+:class:`NoncentralTConverse` and :class:`SolidAngleConverse` evaluate
+**Shannon's 1959 cone-packing converse** — the optimal converse for the AWGN
+channel.  For an equal-power (spherical) codebook the maximum-likelihood
+decision regions are circular cones around each codeword, and the error
+probability of the best code is exactly a non-central t tail.  The formal
+identity between this cone-packing bound and the Polyanskiy–Poor–Verdú
+meta-converse (in the minimax/saddle-point sense) is due to Polyanskiy,
+"Saddle point in the minimax converse for channel coding," IEEE TIT 2013.
+The contribution here is numerical: a robust log-domain evaluation that stays
 accurate far past where scipy's linear non-central t breaks down.
+
+:class:`ChiSquaredConverse` and :class:`~awgn_fbl.erseghe.ErsegheConverse`
+instead evaluate the *relaxed* meta-converse with ``Q_Y = N(0,(1+P)·I)``,
+which is strictly looser than the cone-packing bound at finite n.
 
 Three methods with complementary properties:
 
@@ -28,7 +33,8 @@ Three methods with complementary properties:
   the auxiliary output measure ``Q_Y = N(0, (1+P)·I)``.  Strictly looser
   than the NCT converse at any finite n; kept as a reference because it is
   the standard formulation in the literature and lets us quantify the
-  relaxation cost.
+  relaxation cost.  See :class:`~awgn_fbl.erseghe.ErsegheConverse` for a
+  robust (Temme) evaluation of the same bound past scipy's NaN wall.
 
 * :class:`SolidAngleConverse` — the cone-packing converse in its original
   solid-angle form ``Ω_N(θ)/Ω_N(π)``, exhibiting the cone geometry
@@ -42,9 +48,16 @@ References
   channel," Bell Syst. Tech. J., 1959 — the cone-packing converse.
 * Y. Polyanskiy, H. V. Poor, S. Verdú, "Channel coding rate in the finite
   blocklength regime," IEEE Trans. Inf. Theory, 2010 — the meta-converse.
+* Y. Polyanskiy, "Saddle point in the minimax converse for channel coding,"
+  IEEE Trans. Inf. Theory, 2013 — formal PPV ≡ Shannon cone-packing identity.
 * T. Erseghe, "On the evaluation of the PPV converse bound for finite
   blocklength coding in AWGN," IEEE Trans. Inf. Theory 61(12), 2015
-  (arXiv:1401.7169) — PPV ≡ Shannon cone-packing, non-central χ² evaluation.
+  (arXiv:1401.7169) — robust non-central χ² evaluation of the *relaxed*
+  (``Q_Y = N(0,(1+P)I)``) meta-converse; see :mod:`awgn_fbl.erseghe`.
+* M. Z. Ahmed, M. A. Ambroze, M. Tomlinson, "On computing Shannon's sphere
+  packing bound and applications," ISCTA 2007 — closed-form (incomplete-beta)
+  evaluation of the same cone-packing bound; cross-checked in
+  ``analysis/verify_ahmed.py``.
 """
 
 from __future__ import annotations
@@ -125,9 +138,9 @@ class AWGNConverseBase:
 class NoncentralTConverse(AWGNConverseBase):
     """Shannon's 1959 cone-packing converse, evaluated via the non-central t.
 
-    This is the *optimal* converse for the AWGN channel — equivalently, the
-    PPV meta-converse with the channel-optimal output distribution (Erseghe
-    2015).  The class is the recommended converse throughout the library.
+    This is the *optimal* converse for the AWGN channel — the PPV
+    meta-converse at its minimax saddle point (Polyanskiy 2013).  The class
+    is the recommended converse throughout the library.
 
     Exposes two evaluation paths.  The *simple* ``converse_rate`` /
     ``converse_error`` use scipy's ``stats.nct`` directly in linear domain;

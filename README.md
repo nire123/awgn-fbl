@@ -132,18 +132,19 @@ python generate_chapter_figures.py
 cones around each codeword, and Shannon's 1959 sphere/cone-packing argument
 gives the *optimal* converse — the error probability of the best code is
 exactly a **non-central t** tail.  This is the strongest known converse for the
-AWGN channel, and Polyanskiy–Poor–Verdú's meta-converse, evaluated with the
-channel-optimal output distribution, **coincides with it** for this channel
-(Erseghe 2015).  `NoncentralTConverse` is therefore not a new bound: the
-contribution is a numerically robust **log-domain** evaluation of Shannon's
-cone-packing converse that stays accurate far past where scipy's linear NCT
-breaks down.
+AWGN channel; the formal identity between it and the Polyanskiy–Poor–Verdú
+meta-converse (in the minimax/saddle-point sense) is due to Polyanskiy,
+*Saddle point in the minimax converse* (2013).  `NoncentralTConverse` is
+therefore not a new bound: the contribution is a numerically robust
+**log-domain** evaluation of Shannon's cone-packing converse that stays
+accurate far past where scipy's linear NCT breaks down.
 
 | Class | Method | Notes |
 |---|---|---|
-| `NoncentralTConverse` | **Shannon 1959 cone-packing bound**, evaluated via the non-central t distribution | The optimal AWGN converse.  Linear *and* log-domain methods; log-domain extends the range beyond scipy's NCT NaN wall.  Equivalent to the PPV meta-converse with the optimal `Q_Y` (Erseghe 2015). |
-| `ChiSquaredConverse` | PPV meta-converse with the *relaxed* `Q_Y = N(0,(1+P)·I)` | Not β-optimal, so strictly looser than the cone-packing bound at any finite n; kept as a reference to quantify the relaxation cost. |
-| `SolidAngleConverse` | Shannon 1959 cone-packing in its original solid-angle form `Ω_N(θ)/Ω_N(π)` | Exhibits the cone geometry directly; numerically reliable only for `n ≤ 80` (warns otherwise). |
+| `NoncentralTConverse` | **Shannon 1959 cone-packing bound**, evaluated via the non-central t distribution | The optimal AWGN converse.  Linear *and* log-domain methods; log-domain extends the range beyond scipy's NCT NaN wall. |
+| `ChiSquaredConverse` | PPV meta-converse with the *relaxed* `Q_Y = N(0,(1+P)·I)`, via scipy `ncx2` | Not β-optimal, so strictly looser than the cone-packing bound at finite n (the relaxation the mismatch figures quantify); exact where scipy is well-behaved, NaN at large n / high SNR. |
+| `ErsegheConverse` | The same relaxed `Q_Y` bound, evaluated by **Erseghe's (2015) Temme method** | Exact agreement with `ChiSquaredConverse` to ~1e-12 where scipy works, and stays finite past its NaN wall.  The robust evaluator used for the χ² curves in the plots. |
+| `SolidAngleConverse` | Shannon 1959 cone-packing in its original solid-angle form `Ω_N(θ)/Ω_N(π)` | Exhibits the cone geometry directly; numerically reliable only for `n ≤ 80` (warns otherwise).  Cross-checked against Ahmed–Ambroze–Tomlinson's (2007) closed-form reduction in `analysis/verify_ahmed.py`. |
 
 ### Achievability (lower bounds on rate)
 
@@ -264,9 +265,10 @@ Output: `docs/chapter/main.pdf` (20 pages, includes all figures).
 Foundational references:
 
 - C. E. Shannon, "Probability of error for optimal codes in a Gaussian channel," *Bell System Technical Journal*, 1959 — the **cone-packing converse** that `NoncentralTConverse` evaluates.
-- Y. Polyanskiy, H. V. Poor, S. Verdú, "Channel coding rate in the finite blocklength regime," *IEEE Trans. Inf. Theory*, 2010 — the meta-converse, which for the AWGN channel specializes to Shannon's cone-packing bound.
-- T. Erseghe, "On the evaluation of the Polyanskiy–Poor–Verdú converse bound for finite blocklength coding in AWGN," *IEEE Trans. Inf. Theory*, vol. 61, no. 12, pp. 6578–6590, 2015 — establishes the PPV ≡ Shannon cone-packing equivalence and a non-central χ² evaluation. [arXiv:1401.7169](https://arxiv.org/abs/1401.7169)
-- Sphere/cone-packing converse for the Gaussian channel (University of Plymouth PEARL repository): <https://pearl.plymouth.ac.uk/cgi/viewcontent.cgi?article=2720&context=secam-research>
+- Y. Polyanskiy, H. V. Poor, S. Verdú, "Channel coding rate in the finite blocklength regime," *IEEE Trans. Inf. Theory*, 2010 — the meta-converse.
+- Y. Polyanskiy, "Saddle point in the minimax converse for channel coding," *IEEE Trans. Inf. Theory*, 2013 — the formal identity between the PPV meta-converse and Shannon's cone-packing bound (minimax/saddle-point sense).
+- T. Erseghe, "On the evaluation of the Polyanskiy–Poor–Verdú converse bound for finite blocklength coding in AWGN," *IEEE Trans. Inf. Theory*, vol. 61, no. 12, pp. 6578–6590, 2015 — robust Temme evaluation of the *relaxed* (`Q_Y = N(0,(1+P)I)`) meta-converse; implemented here as `ErsegheConverse`. [arXiv:1401.7169](https://arxiv.org/abs/1401.7169)
+- M. Z. Ahmed, M. A. Ambroze, M. Tomlinson, "On computing Shannon's sphere packing bound and applications," *ISCTA*, 2007 — closed-form (incomplete-beta) evaluation of the same cone-packing bound; cross-checked in `analysis/verify_ahmed.py`. [PEARL](https://pearl.plymouth.ac.uk/secam-research/1721)
 - R. G. Gallager, *Information Theory and Reliable Communication*, Wiley, 1968.
 - Polyanskiy's SPECTRE toolbox: <https://github.com/yp-mit/spectre>
 
