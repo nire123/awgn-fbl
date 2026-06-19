@@ -141,7 +141,7 @@ For the AWGN channel with codewords on the power shell $\BRAs{\bx\colon\norm{\bx
 \begin{center}
 	\emph{Shannon's 1959 sphere-packing bound~\cite{shannon1959probability} \textbf{is} the meta-converse with the $\beta$-minimising $Q_{Y^n}$ for sphere-shell input.}
 \end{center}
-``Optimal'' here is understood within this scope --- among auxiliary output measures $Q_{Y^n}$ for the uniform-on-power-shell input distribution.  The bound is not asserted to be optimal over all input distributions; it is the tightest meta-converse instantiation that our ensemble admits.  The chapter's NCT converse evaluates this bound exactly, for any operating point where the log-domain pipeline is stable.
+``Optimal'' here is understood within this scope --- among auxiliary output measures $Q_{Y^n}$ for the uniform-on-power-shell input distribution.  The bound is not asserted to be optimal over all input distributions; it is the tightest meta-converse instantiation that our ensemble admits.  The chapter's NCT converse evaluates this bound exactly, for any operating point where the log-domain pipeline is stable.  The same equivalence --- that the Polyanskiy--Poor--\verdu\ meta-converse for AWGN coincides with Shannon's 1959 bound --- was established by Erseghe~\cite{erseghe2015evaluation}, who gave an independent evaluation in terms of non-central chi-squared distributions.
 
 \subsection{Polyanskiy's relaxation}
 
@@ -277,6 +277,15 @@ The $\mathrm{RCU}^+$ integral~\eqref{eq:awgn2-rcuplus} itself admits a clean fac
 so that $\log \varepsilon_{\mathrm{ach}}^+ = \log F(R) + \log J(R)$ is a sum of two representable quantities even when $\varepsilon_{\mathrm{ach}}^+$ itself is $10^{-200}$.  The inversion $\varepsilon \to R$ is then a one-dimensional root-find on a smooth monotone function.
 
 The combined effect: the library produces sensible bounds at blocklengths and SNRs where the naive pipeline (scipy NCT, linear RCU$^+$ integrand) returns \texttt{NaN} across the board.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.98\textwidth]{extended_reach.png}
+	\caption{Numerical reach of the log-domain pipeline.  \emph{Left}: cone-packing converse rate vs.\ blocklength at $\mathrm{SNR} = 6$~dB, $\varepsilon = 10^{-6}$.  The log-domain evaluation holds smoothly out to $n = 5000$, whereas the \emph{same} bound through scipy's linear non-central $t$, and the $\chi^2$ relaxation through \texttt{ncx2.ppf}, hit a \texttt{NaN} wall at far smaller $n$ (vertical markers).  \emph{Right}: a deep waterfall at $n = 500$, $\mathrm{SNR} = 6$~dB.  The log-domain converse and a deep-grid $\mathrm{RCU}^+$ (precomputed $F(R)$ taken down to $\varepsilon_{\min} = 10^{-100}$) track each other to $P_e \approx 10^{-45}$, while the default-grid $\mathrm{RCU}^+$ flattens at its $\varepsilon$-floor (grey band).}
+	\label{fig:awgn2-reach}
+\end{figure}
+
+Figure~\ref{fig:awgn2-reach} makes the two regimes explicit, and exposes a difference in \emph{how} the log domain buys reach for the two bounds.  The converse reaches arbitrarily deep out of the box, because its log-domain evaluation never forms an intermediate linear probability.  The $\mathrm{RCU}^+$ reach, by contrast, is set by the depth of the precomputed converse curve $F(R)$ that the integral~\eqref{eq:awgn2-rcuplus} consumes: the factorisation keeps $\log\varepsilon_{\mathrm{ach}}^+$ representable, but only as deep as the smallest $\varepsilon$ on the $F(R)$ grid.  Extending that grid to smaller $\varepsilon$ --- a one-time precomputation cost, since the converse feeding it is accurate that far --- extends the achievability reach to match the converse.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Numerical Results}

@@ -238,7 +238,7 @@ cd docs/chapter
 pdflatex main.tex && pdflatex main.tex   # twice for cross-references
 ```
 
-Output: `docs/chapter/main.pdf` (17 pages, includes all figures).
+Output: `docs/chapter/main.pdf` (20 pages, includes all figures).
 
 ---
 
