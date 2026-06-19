@@ -8,7 +8,7 @@ no hand-tuned data.
 pip install -e .
 python generate_chapter_figures.py     # regenerates every figure in plots/chapter/
 python analysis/stress_plots.py         # regenerates the stress/ sweeps
-pytest tests/ -q                        # 180 tests, ~4 min
+pytest tests/ -q                        # 239 tests, ~6 min
 ```
 
 All rates are in **bits/channel use**; `C = ½·log₂(1 + SNR)` is the Shannon
@@ -117,6 +117,16 @@ Sweeping `ε` over `[10⁻⁵, 0.5]`, at two SNRs:
 |---|---|
 | ![rate vs eps snr0](plots/chapter/rate_vs_eps_snr0.png) | ![rate vs eps snr3](plots/chapter/rate_vs_eps_snr3.png) |
 
+> **Why the curves rise above the capacity line near ε → 0.5.** This is correct,
+> not a plotting error.  Shannon capacity `C` is the `n → ∞`, vanishing-error
+> limit; at *finite* `n` with a *large* allowed error probability the maximum
+> coding rate genuinely exceeds `C`.  The normal approximation makes it exact:
+> `R*(n,ε) ≈ C − √(V/n)·Q⁻¹(ε) + log₂(n)/(2n)`, and since `Q⁻¹(ε) → 0` as
+> `ε → ½` the `+log₂(n)/(2n)` term alone lifts the rate to `C + 0.019` at
+> `ε = 0.5`, `n = 200`.  The converse, RCU⁺ and normal-approximation curves all
+> cross above `C` together, in the correct order (converse ≥ RCU⁺), exactly as
+> expected.  The `C` line is the asymptotic reference, not a finite-`n` ceiling.
+
 ---
 
 ## 4. Waterfall — error probability vs SNR (fixed rate R = 0.3)
@@ -201,28 +211,34 @@ paths take over. See the directory for the full set plus the raw `.csv`.
 
 ## 8. Validation
 
-The numbers above are backed by **180 passing tests** (`pytest tests/`,
-~4 min). Coverage relevant to result correctness:
+The numbers above are backed by **239 passing tests** (`pytest tests/`,
+~6 min). Coverage relevant to result correctness:
 
-* **Cross-validation** — NCT vs χ² converse, log-domain vs linear path
-  (agreement ~10⁻⁶ bits/use), scalar vs vectorised Lemma 1, simple vs
-  PPV-faithful κβ, exact Monte-Carlo random coding vs the RCU⁺ integral.
+* **Implementation cross-validation** — every bound with two implementations is
+  checked against its oracle: NCT log-domain vs linear (~10⁻⁶ bits/use),
+  `ErsegheConverse` vs scipy ncx², RCU⁺ log vs linear and vs Monte-Carlo union,
+  κβ simple vs PPV-faithful and `_log_ncx2_cdf_series` vs scipy ncx², Gallager
+  log vs linear.  See the inventory table in the README.
 * **Published reference points** — Gallager `n=3000, ε=10⁻⁶ → log M = 1225`;
   κβ_PPV β-formula matches Polyanskiy's `betaq_up_v2.m`.
 * **Round-trip identities** — `achievable_error(achievable_rate(ε)) ≈ ε`;
   the `log F` interpolator is exact at its grid nodes.
 * **Monotonicity** of every bound in `n`, `ε`, `SNR`, `R`.
-* **Tail extension** — the log-domain path stays finite where the linear path
-  underflows to zero; `log_nct_cdf` cross-checked against `scipy.stats.t` at
-  `nc = 0`; solid-angle vs NCT below 10⁻¹⁰ relative error at small n.
+* **Tail / range robustness** — the log-domain forms stay finite where the
+  linear/scipy ones NaN or underflow: κβ and the χ² converse valid to n≳10⁴ and
+  ε≲10⁻³⁰, Gallager finite arbitrarily deep, `log_nct_cdf` cross-checked against
+  `scipy.stats.t` at `nc = 0`, solid-angle vs NCT below 10⁻¹⁰ at small n.
 
 ---
 
 ## 9. Numerical reach — the fully log-domain pipeline
 
-**Both of our bounds are evaluated entirely in the log domain**, which is what
-lets them keep working where the standard scipy-based evaluations break down.
-The figure below makes the reach explicit.
+**Every bound in the library is now evaluated in the log domain.**  Our two
+flagship bounds — the cone-packing converse and RCU⁺ — are shown in the reach
+figure below; the reference bounds (Erseghe χ², κβ, Gallager) were made
+log-domain in the same spirit (see the closing note), so nothing in the library
+silently NaNs or underflows in the regimes that matter.  The figure makes the
+converse / RCU⁺ reach explicit.
 
 ![extended reach](plots/chapter/extended_reach.png)
 
@@ -252,3 +268,11 @@ The two bounds differ slightly in *how* the log domain buys reach:
   the converse reaches where it does.
 * The **F(R) interpolator** carries ~3.6 ppm error in `log ε`; a 5× grid
   refinement moves the final RCU⁺ rate by ~10⁻¹⁰ bits/use.
+
+**The reference bounds, too.**  The same complementary / log-domain idea was
+applied to the rest of the library: the **χ² converse** via Erseghe's Temme
+method (`ErsegheConverse`), **κβ** via upper-tail quantiles (`isf`/`sf`,
+`erfinv`) and a saddle-point Poisson-mixture `_log_ncx2_cdf_series` for its
+non-central χ² tail, and **Gallager** via `log_achievable_error = log μ − n·E_r`.
+κβ and the χ² converse are now finite and valid to n ≳ 10⁴, SNR 20, ε ≲ 10⁻³⁰
+(previously NaN past n ≈ 5000); Gallager is finite arbitrarily deep.

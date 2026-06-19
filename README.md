@@ -47,7 +47,7 @@ GaussianSim/
 │   ├── fast_f.py                      ← FastFREvaluator (precomputed F(R))
 │   └── plot.py                        ← plot() + curve registry
 │
-├── tests/                             ← 180 tests, all passing
+├── tests/                             ← 239 tests, all passing
 ├── analysis/                          ← stress tests + sanity checks (diagnostic)
 │
 ├── plots/
@@ -152,21 +152,42 @@ accurate far past where scipy's linear NCT breaks down.
 |---|---|---|
 | `RCUAchievable` | One-shot meta-converse integral, our flagship bound. Linear and log-safe paths. | average |
 | `KappaBetaAchievable` | Simple reference port of Polyanskiy's κβ | maximal |
-| `KappaBetaAchievablePPV` | Faithful PPV port (Newton-iterate β + log-domain fallback) | maximal |
-| `GallagerAchievable` | Gallager random-coding, two-regime closed form | average |
-| `ExactRandomCoding` | Monte-Carlo `E[1 − (1−G(T))^(M-1)]` | average |
+| `KappaBetaAchievablePPV` | Faithful PPV port (upper-tail quantile + log-domain ncx² tail) | maximal |
+| `GallagerAchievable` | Gallager random-coding, two-regime closed form. Linear and log paths. | average |
+| `ExactRandomCoding` | Monte-Carlo `E[1 − (1−G(T))^(M-1)]` (and the RCU⁺ union envelope) | average |
 
 Plus `normal_approx_rate` / `normal_approx_error` (second-order asymptotic, not a bound).
 
-### Simple-reference / efficient-production split
+### Bounds inventory — implementations and cross-checks
 
-A consistent design rule: where a bound has both a direct linear implementation and a more involved log-domain or PPV-faithful implementation, both are kept.  The simple version is a test oracle (cross-checked against the efficient one in the shared regime); the efficient version is the recommended default.
+Most quantities here have **two or more independent implementations**: a simple
+or scipy-based one that acts as a test oracle (correct where it is
+well-conditioned), and a robust log-domain one used by default (accurate where
+scipy NaNs or underflows).  Every pair is cross-validated in the test suite.
 
-| Bound | Simple reference | Efficient / faithful |
+**Converse — two distinct bounds:**
+
+| Bound | Implementations | Cross-checked by |
 |---|---|---|
-| NCT converse | `converse_rate(eps)` (linear scipy NCT) | `converse_rate_log(eps)` (log-domain) |
-| RCU⁺ | `achievable_error(R)` (linear quad) | `log_achievable_error(R)` (Elkayam factorisation) |
-| κβ | `KappaBetaAchievable` (one-shot quantile) | `KappaBetaAchievablePPV` (Newton iteration, log fallback) |
+| **Shannon cone-packing** (optimal) | `NoncentralTConverse` — linear (`converse_rate`, scipy NCT) **and** log-domain (`converse_rate_log`); `SolidAngleConverse` (Shannon's original solid-angle form); Ahmed's closed-form trig reduction (`analysis/verify_ahmed.py`) | `test_converse_log_domain`, `test_converse` (solid-angle vs NCT) |
+| **Relaxed PPV χ²** (`Q_Y=N(0,(1+P)I)`) | `ChiSquaredConverse` (scipy ncx²) **and** `ErsegheConverse` (Temme: exact integral + asymptotic) | `test_erseghe` (Erseghe vs scipy ncx²) |
+
+**Achievability:**
+
+| Bound | Implementations | Cross-checked by |
+|---|---|---|
+| **RCU⁺** (ours) | `RCUAchievable` — linear (`achievable_error`) **and** log-safe (`log_achievable_error`, Elkayam `F·J`); `ExactRandomCoding.rcu_union_error` (Monte-Carlo) | `test_rcu_log_domain`, `test_rcu_verification` (integral vs MC) |
+| **κβ** (Polyanskiy) | `KappaBetaAchievable` (simple) **and** `KappaBetaAchievablePPV` (faithful) | `test_kappabeta_logdomain` (simple vs PPV; series vs scipy) |
+| **Gallager** | `GallagerAchievable` — linear (`achievable_error`) **and** log (`log_achievable_error`) | `test_gallager_logdomain` (log vs linear) |
+| **Exact random coding** | `ExactRandomCoding.exact_error` (Monte-Carlo of the true RC error) | `test_exact_random_coding` |
+
+**Shared primitives**, each with a log-domain form cross-checked against scipy and, where available, a third reference:
+
+| Primitive | scipy / linear | log-domain (ours) | third reference |
+|---|---|---|---|
+| Lemma 1 pairwise error | `pairwise_error_prob` | `log_pairwise_error_prob` | Ahmed trig reduction |
+| Non-central *t* CDF | `scipy.stats.nct` | `log_nct_cdf` (integral rep) | Ahmed incomplete-beta |
+| Non-central χ² CDF | `scipy.stats.ncx2` | `_log_ncx2_cdf_series` (Poisson mixture) | Erseghe Temme |
 
 ---
 
@@ -188,16 +209,17 @@ A consistent design rule: where a bound has both a direct linear implementation 
 pytest tests/ -q
 ```
 
-180 tests covering:
+239 tests covering:
 
-* **Cross-validation**: NCT vs χ² converse, log-domain vs linear, scalar vs vectorised, simple vs PPV-faithful κβ, exact RC vs RCU⁺ envelope.
-* **Polyanskiy reference points**: Gallager `n=3000, ε=10⁻⁶ → log M = 1225`, κβ_PPV β formula matches `betaq_up_v2.m`.
-* **Round-trip identities**: `achievable_error(achievable_rate(ε)) ≈ ε`, `log F` interpolator is exact at grid nodes.
+* **Implementation cross-validation** (the "two implementations" table above): NCT log-domain vs linear; `ErsegheConverse` vs scipy ncx²; RCU⁺ log vs linear and vs Monte-Carlo union; κβ simple vs PPV-faithful and `_log_ncx2_cdf_series` vs scipy ncx²; Gallager log vs linear; solid-angle vs NCT (rel. error below 10⁻¹⁰).
+* **Published reference points**: Gallager `n=3000, ε=10⁻⁶ → log M = 1225`; κβ_PPV β formula matches `betaq_up_v2.m`.
+* **Round-trip identities**: `achievable_error(achievable_rate(ε)) ≈ ε` (every bound, both directions), `log F` interpolator exact at grid nodes.
 * **Monotonicity** of every bound in n, ε, SNR, R.
-* **Tail extension**: log-domain Lemma 1 finite where linear underflows; log_nct_cdf cross-validated against `scipy.stats.t` at `nc = 0`.
-* **Solid-angle vs NCT** at small n: relative error below 10⁻¹⁰.
+* **Tail / range robustness**: log-domain forms finite where the linear/scipy ones NaN or underflow — κβ and the χ² converse valid to n≳10⁴ and ε≲10⁻³⁰, Gallager log finite arbitrarily deep.
 
-Suite runs in 5–10 minutes.
+Suite runs in ~6 minutes.  The external closed-form cross-checks against
+Ahmed–Ambroze–Tomlinson (2007) live in `analysis/verify_ahmed.py`
+(run directly, not under pytest).
 
 ---
 
