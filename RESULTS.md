@@ -35,6 +35,16 @@ The **converse → achievability gap is 0.0092 bits/use** — the two bounds
 sandwich the true maximum coding rate to within ~1% of capacity, roughly an
 order of magnitude tighter than the next-best achievability bound (κβ).
 
+> **The converse row is Shannon's cone-packing bound.**  For an equal-power
+> AWGN codebook the optimal decision regions are circular cones around each
+> codeword; Shannon's 1959 sphere/cone-packing argument gives the *optimal*
+> converse, whose error probability is exactly a non-central t tail.
+> Polyanskiy–Poor–Verdú's meta-converse, with the channel-optimal output
+> distribution, coincides with it for the AWGN channel (Erseghe 2015,
+> [arXiv:1401.7169](https://arxiv.org/abs/1401.7169)).  So the sandwich above
+> is the RCU⁺ achievability against the *strongest possible* converse, not a
+> loose one.
+
 ### Across operating points
 
 Computed directly from the library (`NoncentralTConverse.converse_rate_log`,
@@ -118,12 +128,14 @@ rate, for converse / RCU⁺ / normal approximation.
 
 ---
 
-## 5. Converse optimality — relaxation cost of Polyanskiy's χ²
+## 5. Converse optimality — cone-packing vs Polyanskiy's relaxed χ²
 
-The standard literature converse uses the output measure
-`Q_Y = N(0,(1+P)·I)`, which is not β-optimal. These figures quantify how much
-rate that choice gives up relative to the optimal sphere-packing (Lemma 1 /
-NCT) converse, `R_χ² − R_NCT`.
+The NCT converse here **is** Shannon's 1959 cone-packing bound — the optimal
+AWGN converse (and the PPV meta-converse with the channel-optimal output
+distribution; Erseghe 2015). A commonly-used *relaxed* form instead takes the
+output measure `Q_Y = N(0,(1+P)·I)`, which is **not** β-optimal. These figures
+quantify how much rate that relaxation gives up relative to the optimal
+cone-packing (Lemma 1 / NCT) converse, `R_χ² − R_NCT`.
 
 ### vs SNR (ε = 10⁻³, several blocklengths)
 

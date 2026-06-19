@@ -1,10 +1,20 @@
 """
 Converse (upper) bounds on the maximum coding rate for the AWGN channel.
 
+All three classes evaluate **Shannon's 1959 cone-packing converse** — the
+optimal converse for the AWGN channel.  For an equal-power (spherical)
+codebook the maximum-likelihood decision regions are circular cones around
+each codeword, and the error probability of the best code is exactly a
+non-central t tail.  Polyanskiy–Poor–Verdú's meta-converse, evaluated with
+the channel-optimal output distribution, coincides with this cone-packing
+bound for the AWGN channel (Erseghe, IEEE TIT 2015, arXiv:1401.7169).  The
+contribution here is numerical: a robust log-domain evaluation that stays
+accurate far past where scipy's linear non-central t breaks down.
+
 Three methods with complementary properties:
 
-* :class:`NoncentralTConverse` — our method, based on the non-central t
-  distribution.  Offers two evaluation paths:
+* :class:`NoncentralTConverse` — Shannon's cone-packing converse evaluated
+  via the non-central t distribution.  Offers two evaluation paths:
     - a *simple* linear-domain path via scipy's ``stats.nct``, fast and
       accurate for moderate n but hitting scipy's NaN wall at n≳1000 and
       high SNR;
@@ -20,10 +30,21 @@ Three methods with complementary properties:
   the standard formulation in the literature and lets us quantify the
   relaxation cost.
 
-* :class:`SolidAngleConverse` — Shannon's 1959 original formulation via the
-  solid angle ratio ``Ω_N(θ)/Ω_N(π)``.  Mathematically equivalent to
-  :class:`NoncentralTConverse` but numerically fragile for n > 80 (warning
-  emitted beyond that).  Kept for pedagogy and as a historical cross-check.
+* :class:`SolidAngleConverse` — the cone-packing converse in its original
+  solid-angle form ``Ω_N(θ)/Ω_N(π)``, exhibiting the cone geometry
+  directly.  Mathematically equivalent to :class:`NoncentralTConverse` but
+  numerically fragile for n > 80 (warning emitted beyond that).  Kept for
+  pedagogy and as a historical cross-check.
+
+References
+----------
+* C. E. Shannon, "Probability of error for optimal codes in a Gaussian
+  channel," Bell Syst. Tech. J., 1959 — the cone-packing converse.
+* Y. Polyanskiy, H. V. Poor, S. Verdú, "Channel coding rate in the finite
+  blocklength regime," IEEE Trans. Inf. Theory, 2010 — the meta-converse.
+* T. Erseghe, "On the evaluation of the PPV converse bound for finite
+  blocklength coding in AWGN," IEEE Trans. Inf. Theory 61(12), 2015
+  (arXiv:1401.7169) — PPV ≡ Shannon cone-packing, non-central χ² evaluation.
 """
 
 from __future__ import annotations
@@ -102,7 +123,11 @@ class AWGNConverseBase:
 # ---------------------------------------------------------------------------
 
 class NoncentralTConverse(AWGNConverseBase):
-    """Our NCT-based converse bound.
+    """Shannon's 1959 cone-packing converse, evaluated via the non-central t.
+
+    This is the *optimal* converse for the AWGN channel — equivalently, the
+    PPV meta-converse with the channel-optimal output distribution (Erseghe
+    2015).  The class is the recommended converse throughout the library.
 
     Exposes two evaluation paths.  The *simple* ``converse_rate`` /
     ``converse_error`` use scipy's ``stats.nct`` directly in linear domain;

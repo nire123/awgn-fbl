@@ -2,7 +2,7 @@
 
 Numerical evaluation of converse and achievability bounds on the maximum coding rate of the real-valued AWGN channel at finite blocklength `n`.
 
-This repository accompanies the PhD thesis of **Nir Elkayam** and provides clean, tested implementations of the principal information-theoretic bounds for the AWGN channel — including a novel **RCU+ achievable bound** that is significantly tighter than existing alternatives, and a log-domain converse pipeline that extends the working range far beyond what `scipy.stats.nct` alone can handle.
+This repository accompanies the PhD thesis of **Nir Elkayam** and provides clean, tested implementations of the principal information-theoretic bounds for the AWGN channel — including a novel **RCU+ achievable bound** that is significantly tighter than existing alternatives, and a numerically robust log-domain evaluation of **Shannon's 1959 cone-packing converse** (the optimal AWGN converse) that extends the working range far beyond what `scipy.stats.nct` alone can handle.
 
 A self-contained version of the thesis chapter is included in `docs/chapter/`.
 
@@ -15,13 +15,15 @@ At the reference operating point `n = 200`, `SNR = 0 dB`, `ε = 10⁻³`:
 | Bound | Rate (bits/use) | Gap to capacity |
 |---|---|---|
 | Shannon capacity | 0.5000 | — |
-| NCT converse (ours) | 0.3456 | 0.154 |
+| Shannon cone-packing converse † | 0.3456 | 0.154 |
 | **RCU⁺ achievable (ours)** | **0.3365** | **0.164** |
 | Normal approximation | 0.3261 | 0.174 |
 | κβ (Polyanskiy) | 0.2837 | 0.216 |
 | Gallager | 0.2540 | 0.246 |
 
-RCU⁺ comes within **0.009 bits/use** of the converse — about an order of magnitude tighter than alternative achievable bounds.  See **[RESULTS.md](RESULTS.md)** for the full multi-operating-point tables and figures, or `plots/chapter/showcase_waterfall_n500.png` for the flagship picture.
+† The converse is Shannon's 1959 cone-packing bound — the *optimal* AWGN converse, and the PPV meta-converse with the channel-optimal output distribution (Erseghe 2015).  The contribution is its robust log-domain evaluation (`NoncentralTConverse`), not the bound itself.
+
+RCU⁺ comes within **0.009 bits/use** of the converse — about an order of magnitude tighter than alternative achievable bounds.  Because that converse is the strongest possible one, the sandwich is essentially tight.  See **[RESULTS.md](RESULTS.md)** for the full multi-operating-point tables and figures, or `plots/chapter/showcase_waterfall_n500.png` for the flagship picture.
 
 ---
 
@@ -125,11 +127,23 @@ python generate_chapter_figures.py
 
 ### Converse (upper bounds on rate)
 
+**The converse here is Shannon's cone-packing bound.**  For an equal-power
+(spherical) AWGN codebook the maximum-likelihood decision regions are circular
+cones around each codeword, and Shannon's 1959 sphere/cone-packing argument
+gives the *optimal* converse — the error probability of the best code is
+exactly a **non-central t** tail.  This is the strongest known converse for the
+AWGN channel, and Polyanskiy–Poor–Verdú's meta-converse, evaluated with the
+channel-optimal output distribution, **coincides with it** for this channel
+(Erseghe 2015).  `NoncentralTConverse` is therefore not a new bound: the
+contribution is a numerically robust **log-domain** evaluation of Shannon's
+cone-packing converse that stays accurate far past where scipy's linear NCT
+breaks down.
+
 | Class | Method | Notes |
 |---|---|---|
-| `NoncentralTConverse` | Non-central t (ours) | Linear *and* log-domain methods.  Log-domain extends the range beyond scipy's NCT NaN wall. |
-| `ChiSquaredConverse` | Polyanskiy meta-converse with `Q_Y = N(0,(1+P)I)` | Strictly looser than NCT at any finite n; kept as reference. |
-| `SolidAngleConverse` | Shannon 1959 sphere-packing geometry | Reliable only for `n ≤ 80`; warns otherwise. |
+| `NoncentralTConverse` | **Shannon 1959 cone-packing bound**, evaluated via the non-central t distribution | The optimal AWGN converse.  Linear *and* log-domain methods; log-domain extends the range beyond scipy's NCT NaN wall.  Equivalent to the PPV meta-converse with the optimal `Q_Y` (Erseghe 2015). |
+| `ChiSquaredConverse` | PPV meta-converse with the *relaxed* `Q_Y = N(0,(1+P)·I)` | Not β-optimal, so strictly looser than the cone-packing bound at any finite n; kept as a reference to quantify the relaxation cost. |
+| `SolidAngleConverse` | Shannon 1959 cone-packing in its original solid-angle form `Ω_N(θ)/Ω_N(π)` | Exhibits the cone geometry directly; numerically reliable only for `n ≤ 80` (warns otherwise). |
 
 ### Achievability (lower bounds on rate)
 
@@ -229,9 +243,11 @@ Output: `docs/chapter/main.pdf` (17 pages, includes all figures).
 
 Foundational references:
 
-- Polyanskiy, Poor, Verdú, "Channel coding rate in the finite blocklength regime", IEEE TIT 2010.
-- Shannon, "Probability of error for optimal codes in a Gaussian channel", Bell STJ 1959.
-- Gallager, *Information Theory and Reliable Communication*, Wiley 1968.
+- C. E. Shannon, "Probability of error for optimal codes in a Gaussian channel," *Bell System Technical Journal*, 1959 — the **cone-packing converse** that `NoncentralTConverse` evaluates.
+- Y. Polyanskiy, H. V. Poor, S. Verdú, "Channel coding rate in the finite blocklength regime," *IEEE Trans. Inf. Theory*, 2010 — the meta-converse, which for the AWGN channel specializes to Shannon's cone-packing bound.
+- T. Erseghe, "On the evaluation of the Polyanskiy–Poor–Verdú converse bound for finite blocklength coding in AWGN," *IEEE Trans. Inf. Theory*, vol. 61, no. 12, pp. 6578–6590, 2015 — establishes the PPV ≡ Shannon cone-packing equivalence and a non-central χ² evaluation. [arXiv:1401.7169](https://arxiv.org/abs/1401.7169)
+- Sphere/cone-packing converse for the Gaussian channel (University of Plymouth PEARL repository): <https://pearl.plymouth.ac.uk/cgi/viewcontent.cgi?article=2720&context=secam-research>
+- R. G. Gallager, *Information Theory and Reliable Communication*, Wiley, 1968.
 - Polyanskiy's SPECTRE toolbox: <https://github.com/yp-mit/spectre>
 
 ---
