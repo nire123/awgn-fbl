@@ -2,7 +2,7 @@
 
 Numerical evaluation of converse and achievability bounds on the maximum coding rate of the real-valued AWGN channel at finite blocklength `n`.
 
-This repository accompanies doctoral research on finite-blocklength bounds for the AWGN channel, carried out under the supervision of **Prof. Meir Feder**.  It provides tested implementations of the principal information-theoretic bounds for the channel — an **RCU⁺ achievability bound**, and a log-domain evaluation of **Shannon's 1959 cone-packing converse** that holds well beyond the range where `scipy.stats.nct` returns `NaN`.
+This repository accompanies the doctoral research of **Nir Elkayam** on finite-blocklength bounds for the AWGN channel, carried out under the supervision of **Prof. Meir Feder**.  It provides tested implementations of the principal information-theoretic bounds for the channel — an **RCU⁺ achievability bound**, and a log-domain evaluation of **Shannon's 1959 cone-packing converse** that holds well beyond the range where `scipy.stats.nct` returns `NaN`.
 
 A self-contained version of the thesis chapter is included in `docs/chapter/`.
 
@@ -215,13 +215,25 @@ Temme evaluation of the relaxed converse.
 
 ---
 
+## Documentation
+
+| Where | What |
+|---|---|
+| [`docs/chapter/`](docs/chapter/) (`main.pdf`, LaTeX) | the self-contained thesis chapter — full derivations: Lemma 1, the meta-converse and its β-optimal `Q_Y`, the RCU⁺ construction, the small-`n` exact-RC analysis. |
+| [`docs/notes/alternative-evaluations.md`](docs/notes/alternative-evaluations.md) | **Ahmed's** trigonometric reduction (vs the geometric Lemma 1) and **Erseghe's** Temme evaluation of the relaxed converse — theory, equivalence, and breakdown ranges. |
+| [`docs/notes/kappabeta-log-domain.md`](docs/notes/kappabeta-log-domain.md) | how κβ was made log-domain (complementary probabilities + the saddle-point Poisson-mixture χ² CDF), and how the same idea unifies every bound. |
+| [`RESULTS.md`](RESULTS.md) | numerical results, tables, and every figure with interpretation. |
+| [`tests/README.md`](tests/README.md) | what each of the 239 tests checks. |
+
+---
+
 ## Tests
 
 ```bash
 pytest tests/ -q
 ```
 
-239 tests covering:
+239 tests; a per-file breakdown is in [`tests/README.md`](tests/README.md).  Covering:
 
 * **Implementation cross-validation** (the "two implementations" table above): NCT log-domain vs linear; `ErsegheConverse` vs scipy ncx²; RCU⁺ log vs linear and vs Monte-Carlo union; κβ simple vs PPV-faithful and `_log_ncx2_cdf_series` vs scipy ncx²; Gallager log vs linear; solid-angle vs NCT (rel. error below 10⁻¹⁰).
 * **Published reference points**: Gallager `n=3000, ε=10⁻⁶ → log M = 1225`; κβ_PPV β formula matches `betaq_up_v2.m`.
