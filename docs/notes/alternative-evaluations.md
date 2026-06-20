@@ -66,9 +66,18 @@ The closed form carries binomials $\binom{2p}{k}\sim 2^{m}$ with **alternating
 signs**; in float64 their partial sums cancel catastrophically, so the result
 loses all precision by $n\approx200$ and goes negative by $n\approx400$.  Our
 log-domain Lemma 1 has no such cancellation and stays exact to arbitrary $n$.
-**Conclusion:** Ahmed's reduction is a valuable independent check of the *same*
-geometric quantity at moderate $n$, and it confirms our Lemma 1 is the more
-stable evaluation of exactly that quantity.
+
+A fairness note: this is a limitation of *that closed form taken literally*, not
+of Ahmed's overall method.  Their paper claims (and demonstrates, e.g.
+DVB-S2 with $n\approx65{,}000$) exact evaluation at large $n$, and that
+robustness rests on the **incomplete-beta** algorithm of §1.4 below — the
+solid-angle/geometry term is itself a regularised incomplete beta, so that
+same machinery evaluates it without cancellation.  The eqs 6–7 trig sum is a
+secondary closed form, and the paper does not analyse its float stability.
+**Conclusion:** Ahmed's reduction is a useful independent check of the *same*
+geometric quantity at moderate $n$; pushed to large $n$ in float64 it confirms
+that the integral form (our log-domain Lemma 1, or equivalently the incomplete
+beta) is the stable way to evaluate it.
 
 ### 1.4 Ahmed's log-domain non-central $t$ CDF
 
@@ -84,7 +93,11 @@ The cross-check (task 2) shows they agree to $\sim6$ digits in the body of the
 distribution.  One difference: Ahmed recover the probability as
 $P=1-\tfrac12 e^{-\lambda}\,\Sigma$, a linear subtraction that floors the
 lower-tail accuracy at $\sim10^{-12}$, whereas `log_nct_cdf` returns $\log P$
-directly and reaches $e^{-700}$ and beyond.
+directly and reaches $e^{-700}$ and beyond.  This is below Ahmed's own operating
+range — their applications are real codes at codeword-error rates $\sim10^{-6}$,
+so the floor never arises there; it matters only for evaluating the *bound
+itself* deep in the tail (e.g. $\varepsilon\sim10^{-50}$), which is this
+library's use case rather than theirs.
 
 **References:** M. Z. Ahmed, M. A. Ambroze, M. Tomlinson, *On computing
 Shannon's sphere packing bound and applications*, ISCTA 2007.
