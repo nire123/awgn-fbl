@@ -8,7 +8,7 @@ no hand-tuned data.
 pip install -e .
 python generate_chapter_figures.py     # regenerates every figure in plots/chapter/
 python analysis/stress_plots.py         # regenerates the stress/ sweeps
-pytest tests/ -q                        # 239 tests, ~6 min
+pytest tests/ -q                        # 261 tests, ~6 min
 ```
 
 All rates are in **bits/channel use**; `C = ½·log₂(1 + SNR)` is the Shannon
@@ -210,7 +210,7 @@ paths take over. See the directory for the full set plus the raw `.csv`.
 
 ## 8. Validation
 
-The numbers above are backed by **239 passing tests** (`pytest tests/`,
+The numbers above are backed by **261 passing tests** (`pytest tests/`,
 ~6 min). Coverage relevant to result correctness:
 
 * **Implementation cross-validation** — every bound with two implementations is

@@ -21,7 +21,7 @@ At the reference operating point `n = 200`, `SNR = 0 dB`, `ε = 10⁻³`:
 | κβ (Polyanskiy) | 0.2837 | 0.216 |
 | Gallager | 0.2540 | 0.246 |
 
-† The converse is Shannon's 1959 cone-packing bound — the *optimal* AWGN converse, and the PPV meta-converse with the channel-optimal output distribution (Erseghe 2015).  The contribution is its robust log-domain evaluation (`NoncentralTConverse`), not the bound itself.
+† The converse is Shannon's 1959 cone-packing bound — the β-optimal AWGN converse, equivalently the PPV meta-converse at its minimax saddle point (Polyanskiy 2013).  The contribution is its robust log-domain evaluation (`NoncentralTConverse`), not the bound itself.
 
 RCU⁺ comes within **0.009 bits/use** of the converse — about an order of magnitude closer than the other achievability bounds.  Since that converse is the β-optimal one for this ensemble, the two bounds bracket the maximum coding rate tightly.  See **[RESULTS.md](RESULTS.md)** for the full multi-operating-point tables and figures, or `plots/chapter/showcase_waterfall_n500.png` for the headline figure.
 
@@ -48,7 +48,7 @@ GaussianSim/
 │   ├── fast_f.py                      ← FastFREvaluator (precomputed F(R))
 │   └── plot.py                        ← plot() + curve registry
 │
-├── tests/                             ← 239 tests, all passing
+├── tests/                             ← 261 tests, all passing
 ├── analysis/                          ← stress tests + sanity checks (diagnostic)
 │
 ├── plots/
@@ -225,7 +225,7 @@ Temme evaluation of the relaxed converse.
 | [`docs/notes/alternative-evaluations.md`](docs/notes/alternative-evaluations.md) | **Ahmed's** trigonometric reduction (vs the geometric Lemma 1) and **Erseghe's** Temme evaluation of the relaxed converse — theory, equivalence, and breakdown ranges. |
 | [`docs/notes/kappabeta-log-domain.md`](docs/notes/kappabeta-log-domain.md) | how κβ was made log-domain (complementary probabilities + the saddle-point Poisson-mixture χ² CDF), and how the same idea unifies every bound. |
 | [`RESULTS.md`](RESULTS.md) | numerical results, tables, and every figure with interpretation. |
-| [`tests/README.md`](tests/README.md) | what each of the 239 tests checks. |
+| [`tests/README.md`](tests/README.md) | what each of the 261 tests checks. |
 
 ---
 
@@ -235,7 +235,7 @@ Temme evaluation of the relaxed converse.
 pytest tests/ -q
 ```
 
-239 tests; a per-file breakdown is in [`tests/README.md`](tests/README.md).  Covering:
+261 tests; a per-file breakdown is in [`tests/README.md`](tests/README.md).  Covering:
 
 * **Implementation cross-validation** (the "two implementations" table above): NCT log-domain vs linear; `ErsegheConverse` vs scipy ncx²; RCU⁺ log vs linear and vs Monte-Carlo union; κβ simple vs PPV-faithful and `_log_ncx2_cdf_series` vs scipy ncx²; Gallager log vs linear; solid-angle vs NCT (rel. error below 10⁻¹⁰).
 * **Published reference points**: Gallager `n=3000, ε=10⁻⁶ → log M = 1225`; κβ_PPV β formula matches `betaq_up_v2.m`.
