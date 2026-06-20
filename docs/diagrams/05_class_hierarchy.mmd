@@ -4,13 +4,15 @@ classDiagram
         +float snr_db
         +float snr
         +shannon_capacity() float
-        +_pairwise_error_prob(t) float
+        +log_pairwise_error_prob(t) float
         +converse_rate(epsilon)* float
     }
 
     class NoncentralTConverse {
         +converse_rate(epsilon) float
+        +converse_rate_log(epsilon) float
         +converse_error(rate_bits) float
+        +log_converse_error(rate_bits) float
     }
 
     class ChiSquaredConverse {
@@ -22,34 +24,57 @@ classDiagram
         +converse_rate(epsilon) float
     }
 
+    class ErsegheConverse {
+        +str method
+        +converse_rate(epsilon) float
+        +log_converse_error(rate_bits) float
+    }
+
     class RCUAchievable {
         +F_eval FastFREvaluator
         +achievable_rate(epsilon) float
         +achievable_error(R_bits) float
+        +achievable_rate_v2(epsilon) float
+        +log_achievable_error(R_bits) float
     }
 
-    class KappaBetaAchievableV2 {
+    class _KappaBetaBase {
         -_kappa_inf(tau) float
-        -_betaq_upper(q) float
+        -_log_ncx2_cdf(x, df, nc) float
         +achievable_rate(epsilon) float
+    }
+    class KappaBetaAchievable {
+        -_betaq_upper(p_up) float
+    }
+    class KappaBetaAchievablePPV {
+        -_betaq_upper(p_up) float
     }
 
     class GallagerAchievable {
         +Rcr_bits float
-        -_gallager_pe(R_bits) float
-        +achievable_rate(epsilon) float
         +achievable_error(R_bits) float
+        +log_achievable_error(R_bits) float
+        +achievable_rate(epsilon) float
+    }
+
+    class ExactRandomCoding {
+        +exact_error(R_bits) float
+        +rcu_union_error(R_bits) float
     }
 
     class FastFREvaluator {
         +R_grid ndarray
         +eps_grid ndarray
         -_precompute()
+        +log_F(R) float
         +__call__(R) float
     }
 
     AWGNConverseBase <|-- NoncentralTConverse
     AWGNConverseBase <|-- ChiSquaredConverse
     AWGNConverseBase <|-- SolidAngleConverse
+    _KappaBetaBase <|-- KappaBetaAchievable
+    _KappaBetaBase <|-- KappaBetaAchievablePPV
     RCUAchievable o-- FastFREvaluator
     FastFREvaluator ..> NoncentralTConverse : uses
+    RCUAchievable ..> NoncentralTConverse : reuses F(R)

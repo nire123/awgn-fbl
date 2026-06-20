@@ -3,16 +3,16 @@ graph TB
 
     subgraph Converse["CONVERSE · upper bounds on R"]
         Ccap["Shannon capacity C<br/><i>asymptotic</i>"]
-        Cnct["NCT converse <b>(ours)</b><br/>avg err · ε↔R"]
-        Cchi["χ² converse<br/>avg err · ε→R"]
+        Cnct["Cone-packing converse<br/>NoncentralTConverse · β-optimal"]
+        Cchi["Relaxed χ² converse<br/>ChiSquared (scipy) · Erseghe (Temme)"]
         Csph["SolidAngle converse<br/>n ≤ 80"]
     end
 
     subgraph Achievable["ACHIEVABLE · lower bounds on R"]
-        Arcu["<b>RCU+ (ours)</b><br/>avg err · ε↔R<br/>tightest"]
+        Arcu["RCU+<br/>avg err · ε↔R"]
         Aga["Gallager<br/>avg err · ε↔R"]
-        Akb1["κβ v1<br/>max err · ε→R"]
-        Akb2["κβ v2 (PPV port)<br/>max err · ε→R"]
+        Akb1["κβ simple<br/>max err · ε→R"]
+        Akb2["κβ PPV-faithful<br/>max err · ε→R"]
     end
 
     subgraph Approx["APPROXIMATION"]
@@ -30,13 +30,11 @@ graph TB
     Anorm -. approx .-> Rstar
 
     classDef truth fill:#ffebee,stroke:#b71c1c,stroke-width:3px
-    classDef ours fill:#d4edda,stroke:#155724,stroke-width:2px
     classDef conv fill:#e3f2fd,stroke:#0d47a1
     classDef ach fill:#fff3cd,stroke:#856404
     classDef approx fill:#f3e5f5,stroke:#4a148c
 
     class Rstar truth
-    class Cnct,Arcu ours
-    class Ccap,Cchi,Csph conv
-    class Aga,Akb1,Akb2 ach
+    class Ccap,Cnct,Cchi,Csph conv
+    class Arcu,Aga,Akb1,Akb2 ach
     class Anorm approx

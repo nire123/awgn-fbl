@@ -170,7 +170,7 @@ wrappers (`plot_rate_vs_snr`, `plot_error_vs_snr`, …) name the common cases.
 
 ## Notes on the diagrams
 
-The mermaid blocks above are the current, authoritative picture.  The PNGs in
-[`docs/diagrams/`](docs/diagrams/) predate the package restructure and use the
-old single-file names (`awgn_converse.py`, `rcu_achievable.py`, …); prefer this
-file.
+The mermaid blocks above are also kept as standalone sources in
+[`docs/diagrams/`](docs/diagrams/) (`.mmd`) with rendered `.png` versions.  To
+update them, edit the `.mmd` and re-run `python docs/diagrams/_render.py`
+(renders via the mermaid.ink service).

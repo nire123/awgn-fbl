@@ -1,23 +1,27 @@
 flowchart TD
     t(["t in (0, 1)<br/>fundamental parameter"])
 
-    subgraph Path1["t to R (via Lemma 1)"]
-        P["P(t) = Lemma 1 integral<br/>pairwise error probability"]
-        R(["R = -log2(P(t)) / n"])
+    subgraph Path1["t to R (via log Lemma 1)"]
+        P["log P(t) = log_pairwise_error_prob<br/>logsumexp over theta-grid"]
+        R(["R = -log P(t) / (n ln2)"])
         P --> R
     end
 
-    subgraph Path2["t to eps (via NCT CDF)"]
+    subgraph Path2["t to eps (via log NCT CDF)"]
         beta["beta = t^2 / (1 - t^2)"]
         thr["threshold = sqrt(beta times (n-1))"]
-        eps(["eps = NCT_CDF(threshold)<br/>df = n-1, nc = sqrt(n*P)"])
+        eps(["log eps = log_nct_cdf(threshold)<br/>df = n-1, nc = sqrt(n*P)"])
         beta --> thr --> eps
     end
 
     t --> P
     t --> beta
 
+    note["converse_rate_log(eps): Brent-invert Path 2<br/>for t, then evaluate Path 1"]
+
     classDef input fill:#fff3cd,stroke:#856404,stroke-width:2px
     classDef output fill:#d4edda,stroke:#155724,stroke-width:2px
+    classDef ann fill:#e2e3e5,stroke:#383d41
     class t input
     class R,eps output
+    class note ann

@@ -64,7 +64,7 @@ GaussianSim/
     ├── notes/                         ← implementation / theory deep-dives
     │   ├── kappabeta-log-domain.md    ← how κβ was made log-domain
     │   └── alternative-evaluations.md ← Ahmed trig sum & Erseghe Temme
-    └── diagrams/                      ← older rendered diagrams (see ARCHITECTURE.md)
+    └── diagrams/                      ← architecture diagrams (.mmd + .png; see ARCHITECTURE.md)
 ```
 
 ---
