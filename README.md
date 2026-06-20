@@ -60,6 +60,9 @@ GaussianSim/
     │   ├── chapter_awgn.tex           ← chapter body
     │   ├── _preamble.tex              ← minimal macros (no thesis dependency)
     │   └── main.pdf                   ← compiled standalone (tracked)
+    ├── notes/                         ← implementation / theory deep-dives
+    │   ├── kappabeta-log-domain.md    ← how κβ was made log-domain
+    │   └── alternative-evaluations.md ← Ahmed trig sum & Erseghe Temme
     └── diagrams/                      ← architecture diagrams (mermaid + png)
 ```
 
@@ -188,6 +191,15 @@ scipy NaNs or underflows).  Every pair is cross-validated in the test suite.
 | Lemma 1 pairwise error | `pairwise_error_prob` | `log_pairwise_error_prob` | Ahmed trig reduction |
 | Non-central *t* CDF | `scipy.stats.nct` | `log_nct_cdf` (integral rep) | Ahmed incomplete-beta |
 | Non-central χ² CDF | `scipy.stats.ncx2` | `_log_ncx2_cdf_series` (Poisson mixture) | Erseghe Temme |
+
+Two deep-dive notes in [`docs/notes/`](docs/notes/) cover the theory and
+numerics behind these:
+[**kappabeta-log-domain.md**](docs/notes/kappabeta-log-domain.md) — how κβ was
+made log-domain (complementary probabilities + the saddle-point Poisson-mixture
+χ² CDF) and how that unifies every bound; and
+[**alternative-evaluations.md**](docs/notes/alternative-evaluations.md) —
+Ahmed's trigonometric reduction (replacing the geometric Lemma 1) and Erseghe's
+Temme evaluation of the relaxed converse.
 
 ---
 
