@@ -102,7 +102,7 @@ LABEL_TO_ID = {
     "Shannon capacity": "capacity",
     "Shannon cone-packing converse": "converse_nct",
     r"$\chi^2$ converse (Polyanskiy, relaxed $Q_Y$)": "converse_chi2",
-    "RCU$^+$ achievable (ours)": "rcu",
+    "RCU$^+$ achievable": "rcu",
     r"$\kappa\beta$ achievable (simple)": "kappabeta",
     r"$\kappa\beta$ achievable (PPV-faithful)": "kappabeta_ppv",
     "Gallager achievable": "gallager",

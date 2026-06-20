@@ -61,7 +61,7 @@ CURVE_STYLES = {
     "converse_chi2": {"color": "b",      "ls": "--", "lw": 2,   "marker": "s",
                       "label": r"$\chi^2$ converse (Polyanskiy, relaxed $Q_Y$)"},
     "rcu":           {"color": "g",      "ls": "-",  "lw": 2.5, "marker": "^",
-                      "label": "RCU$^+$ achievable (ours)"},
+                      "label": "RCU$^+$ achievable"},
     "kappabeta":     {"color": "m",      "ls": "--", "lw": 1.5, "marker": "D",
                       "label": r"$\kappa\beta$ achievable (simple)"},
     "kappabeta_ppv": {"color": "purple", "ls": "-.", "lw": 1.5, "marker": "v",

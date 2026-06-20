@@ -105,7 +105,7 @@ def fig_mismatch_gap_vs_snr():
 
     ax.set_xlabel("SNR (dB)", fontsize=13)
     ax.set_ylabel(
-        r"$R_{\chi^2}^{\mathrm{Polyanskiy}} - R_{\mathrm{NCT}}^{\mathrm{ours}}$"
+        r"$R_{\chi^2}^{\mathrm{Polyanskiy}} - R_{\mathrm{NCT}}^{\mathrm{opt}}$"
         "  (bits/channel use)",
         fontsize=12,
     )
@@ -145,13 +145,13 @@ def fig_mismatch_gap_vs_n():
 
     ax.set_xlabel("Block length n", fontsize=13)
     ax.set_ylabel(
-        r"$R_{\chi^2}^{\mathrm{Polyanskiy}} - R_{\mathrm{NCT}}^{\mathrm{ours}}$"
+        r"$R_{\chi^2}^{\mathrm{Polyanskiy}} - R_{\mathrm{NCT}}^{\mathrm{opt}}$"
         "  (bits/channel use)",
         fontsize=12,
     )
     ax.set_title(
         r"Gap shrinks as $O(1/n)$ — both bounds converge to Shannon capacity;"
-        r" ours is tighter at every finite $n$",
+        r" the optimal bound is tighter at every finite $n$",
         fontsize=11,
     )
     ax.legend(fontsize=11, loc="upper right")
@@ -203,7 +203,7 @@ def fig_showcase_waterfall(n: int = 500,
                            snr_list=(0, 4, 8, 12, 16, 20),
                            inset_snr: int = 8,
                            eps_floor: float = 1e-14):
-    """Flagship figure: converse / RCU+ / normal approximation at several SNRs,
+    """Showcase figure: converse / RCU+ / normal approximation at several SNRs,
     with a zoom inset on one operating point."""
     cmap = plt.cm.viridis(np.linspace(0.08, 0.92, len(snr_list)))
     fig, ax = plt.subplots(figsize=(13, 8))
@@ -388,7 +388,7 @@ def fig_extended_reach(n_panelB: int = 500, snr_panelB: int = 6):
     log_c, lin_c, chi_c = map(np.array, (log_c, lin_c, chi_c))
 
     axA.plot(ns, log_c, "r-", lw=2.6,
-             label="Shannon cone-packing, log-domain (ours)")
+             label="Shannon cone-packing, log-domain")
     axA.plot(ns, _safe_positive(lin_c), "b--", lw=1.8, marker="s",
              markevery=3, ms=5, label="same bound — linear scipy NCT")
     axA.plot(ns, _safe_positive(chi_c), "g-.", lw=1.8, marker="o",

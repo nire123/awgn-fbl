@@ -155,7 +155,7 @@ the capacity-achieving product output marginal under i.i.d.\ Gaussian input.  Th
 
 Figures~\ref{fig:awgn2-mismatch-snr} and~\ref{fig:awgn2-mismatch-n} show the numerical difference
 \begin{equation*}
-	R_{\chi^2}^{\mathrm{Polyanskiy}}(n, \varepsilon, \mathrm{SNR}) - R_{\mathrm{NCT}}^{\mathrm{ours}}(n, \varepsilon, \mathrm{SNR})
+	R_{\chi^2}^{\mathrm{Polyanskiy}}(n, \varepsilon, \mathrm{SNR}) - R_{\mathrm{NCT}}^{\mathrm{opt}}(n, \varepsilon, \mathrm{SNR})
 \end{equation*}
 at $\varepsilon = 10^{-3}$.  The gap is non-negative across the parameter range we test (the optimal-$Q_Y$ bound is at least as tight) and decays with $n$ as $O(1/n)$.  The decay reflects a tractability--optimality trade-off rather than a defect: Polyanskiy's choice yields a closed form in terms of non-central chi-squared quantiles, whereas the optimal-$Q_Y$ value requires evaluating Lemma~\ref{lemma:pairwise_continuous_v2} numerically.
 
@@ -305,9 +305,9 @@ We begin with a detailed comparison at $n = 200$, $\mathrm{SNR} = 0$~dB, $\varep
 	Bound & Type & $R$ (bits/use) & Gap to converse \\
 	\midrule
 	Shannon capacity                                & ---     & 0.5000 & --- \\
-	NCT converse (ours; optimal meta-converse)      & Upper   & 0.3456 & --- \\
+	NCT converse (optimal meta-converse)            & Upper   & 0.3456 & --- \\
 	$\chi^2$ converse~\cite{polyanskiy2010channel}  & Upper   & 0.3484 & --- \\
-	$\mathrm{RCU}^+$ (ours)                         & Lower   & 0.3365 & 0.0092 \\
+	$\mathrm{RCU}^+$                                & Lower   & 0.3365 & 0.0092 \\
 	Normal approximation~\cite{polyanskiy2010channel} & Approx. & 0.3261 & 0.0196 \\
 	$\kappa\beta$~\cite{polyanskiy2010channel}      & Lower   & 0.2837 & 0.0620 \\
 	\bottomrule
@@ -338,7 +338,7 @@ Figure~\ref{fig:awgn2-rate-snr-n200} shows the whole bound stack at $n=200$ acro
 
 The converse--achievability gap closes at the rate predicted by the normal approximation $\Theta(1/\sqrt n)$.  Combined with Figure~\ref{fig:awgn2-mismatch-n}, we see the two relevant scales: the true finite-blocklength penalty ($1/\sqrt n$) and the relaxation cost of Polyanskiy's choice of $Q_Y$ ($1/n$, an order faster); at any finite $n$ the relaxation cost is a lower-order effect but not zero.
 
-\subsection{Flagship: converse, $\mathrm{RCU}^+$ and normal approximation in one picture}
+\subsection{Converse, $\mathrm{RCU}^+$ and normal approximation in one picture}
 
 Figure~\ref{fig:awgn2-showcase} plots the three main quantities --- converse (dashed), $\mathrm{RCU}^+$ (solid with markers) and normal approximation (dotted) --- as a function of rate, on a logarithmic error-probability axis, for six SNRs spanning $0$--$20$~dB at $n = 500$.  Each SNR traces a steep waterfall from $P_e \approx 1$ near capacity to $P_e \to 0$ at lower rates.  The inset zoom at $\mathrm{SNR} = 8$~dB resolves the tight converse--$\mathrm{RCU}^+$ bracket and shows that the normal approximation, while qualitatively correct, is displaced by several orders of magnitude at any fixed rate.  The displacement is a direct consequence of the waterfall's steepness: a $\sim$0.005~bit/use shift in $R$ near the operating point corresponds to a one-decade shift in $P_e$, so even small approximation errors in $R$ translate to large multiplicative errors in $\varepsilon$.
 

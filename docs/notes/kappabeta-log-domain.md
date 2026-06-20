@@ -158,7 +158,7 @@ quantity of interest is never the small remainder of an $O(1)$ subtraction.**
 |---|---|
 | **Cone-packing converse** (`converse_rate_log`) | never calls `nct.ppf`; instead Brent-inverts `log_nct_cdf` (an integral representation $\mathbb E_X[\Phi(x\sqrt{X/\nu}-\mu)]$ kept in logs), and maps $t\to R$ through the log-domain Lemma 1 |
 | **Relaxed χ² converse** (`ErsegheConverse`) | non-central $\chi^2$ tails via Temme's expansion, $\log P=\log g-\tfrac n2 v$ — see [alternative-evaluations.md](alternative-evaluations.md) |
-| **RCU⁺** (`log_achievable_error`) | Elkayam factorisation $\log P(R)=\log F(R)+\log J(R)$, a sum of two well-conditioned terms instead of one underflowing integral |
+| **RCU⁺** (`log_achievable_error`) | the $F\cdot J$ factorisation $\log P(R)=\log F(R)+\log J(R)$, a sum of two well-conditioned terms instead of one underflowing integral |
 | **Gallager** (`log_achievable_error`) | the bound is an exponential, so $\log P_e=\log\mu-nE_r$ directly; the prefactor $\mu$ is a central-$\chi^2$ difference near the mean |
 | **κβ** (this note) | upper-tail quantiles (`isf`/`sf`, `erfinv`/`erf`) + the saddle-point Poisson-mixture `_log_ncx2_cdf_series` |
 

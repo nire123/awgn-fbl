@@ -13,7 +13,7 @@ The package groups:
   relaxation), :class:`SolidAngleConverse` (Shannon 1959).
 
 * Achievability bounds :mod:`awgn_fbl.achievable`:
-  :class:`RCUAchievable` (our flagship, with linear and log-safe paths),
+  :class:`RCUAchievable` (RCU⁺, with linear and log-safe paths),
   :class:`KappaBetaAchievable` (simple) and :class:`KappaBetaAchievablePPV`
   (faithful PPV port), :class:`GallagerAchievable`,
   :class:`ExactRandomCoding` (Monte-Carlo).

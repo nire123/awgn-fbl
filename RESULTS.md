@@ -25,25 +25,24 @@ At the reference operating point `n = 200`, `SNR = 0 dB`, `ε = 10⁻³`:
 | Bound | Rate | Gap to capacity |
 |---|---|---|
 | Shannon capacity | 0.5000 | — |
-| **NCT converse (ours)** | **0.3456** | 0.154 |
-| **RCU⁺ achievable (ours)** | **0.3365** | 0.164 |
+| **Shannon cone-packing converse** | **0.3456** | 0.154 |
+| **RCU⁺ achievable** | **0.3365** | 0.164 |
 | Normal approximation | 0.3261 | 0.174 |
 | κβ (Polyanskiy, PPV-faithful) | 0.2837 | 0.216 |
 | Gallager | 0.2540 | 0.246 |
 
 The **converse → achievability gap is 0.0092 bits/use** — the two bounds
-sandwich the true maximum coding rate to within ~1% of capacity, roughly an
-order of magnitude tighter than the next-best achievability bound (κβ).
+bracket the maximum coding rate to within ~1% of capacity, about an order of
+magnitude closer than the next achievability bound (κβ).
 
 > **The converse row is Shannon's cone-packing bound.**  For an equal-power
-> AWGN codebook the optimal decision regions are circular cones around each
-> codeword; Shannon's 1959 sphere/cone-packing argument gives the *optimal*
-> converse, whose error probability is exactly a non-central t tail.
-> Polyanskiy–Poor–Verdú's meta-converse, with the channel-optimal output
-> distribution, coincides with it for the AWGN channel (Erseghe 2015,
-> [arXiv:1401.7169](https://arxiv.org/abs/1401.7169)).  So the sandwich above
-> is the RCU⁺ achievability against the *strongest possible* converse, not a
-> loose one.
+> AWGN codebook the maximum-likelihood decision regions are circular cones
+> around each codeword; Shannon's 1959 sphere/cone-packing argument gives the
+> β-optimal converse, whose error probability is exactly a non-central t tail.
+> The formal identity between this bound and the Polyanskiy–Poor–Verdú
+> meta-converse (in the minimax/saddle-point sense) is due to Polyanskiy
+> (2013).  So the bracket above is the RCU⁺ achievability against the β-optimal
+> converse, not a loose one.
 
 ### Across operating points
 
@@ -68,7 +67,7 @@ Computed directly from the library (`NoncentralTConverse.converse_rate_log`,
 
 ---
 
-## 2. Flagship — converse vs RCU⁺ across SNR
+## 2. Converse vs RCU⁺ across SNR
 
 ![showcase waterfall](plots/chapter/showcase_waterfall_n500.png)
 
@@ -233,12 +232,12 @@ The numbers above are backed by **239 passing tests** (`pytest tests/`,
 
 ## 9. Numerical reach — the fully log-domain pipeline
 
-**Every bound in the library is now evaluated in the log domain.**  Our two
-flagship bounds — the cone-packing converse and RCU⁺ — are shown in the reach
-figure below; the reference bounds (Erseghe χ², κβ, Gallager) were made
-log-domain in the same spirit (see the closing note), so nothing in the library
-silently NaNs or underflows in the regimes that matter.  The figure makes the
-converse / RCU⁺ reach explicit.
+**Every bound in the library is now evaluated in the log domain.**  The
+cone-packing converse and RCU⁺ are shown in the reach figure below; the
+reference bounds (Erseghe χ², κβ, Gallager) were made log-domain in the same
+way (see the closing note), so nothing in the library silently NaNs or
+underflows in the regimes that matter.  The figure makes the converse / RCU⁺
+reach explicit.
 
 ![extended reach](plots/chapter/extended_reach.png)
 
@@ -260,7 +259,7 @@ The two bounds differ slightly in *how* the log domain buys reach:
 | Bound | Log-domain mechanism | Reach |
 |---|---|---|
 | **Converse** (cone-packing) | `log_nct_cdf` integral representation on a log-uniform χ²-grid + log-domain Lemma 1 | Essentially unlimited — verified to `n = 5000`, `ε` far below `10⁻³⁰⁰`, out of the box. |
-| **RCU⁺** (achievable) | Elkayam factorisation `log P = log F(R) + log J(R)`, two well-conditioned terms | Set by the depth of the converse curve `F(R)` it integrates: the default grid floors at `ε = 10⁻¹⁰`; pass `RCUAchievable(..., eps_min=1e-100)` to reach the deep tail (the converse feeding it is accurate that far). |
+| **RCU⁺** (achievable) | the `F·J` factorisation `log P = log F(R) + log J(R)`, two well-conditioned terms | Set by the depth of the converse curve `F(R)` it integrates: the default grid floors at `ε = 10⁻¹⁰`; pass `RCUAchievable(..., eps_min=1e-100)` to reach the deep tail (the converse feeding it is accurate that far). |
 
 * **scipy's `nct.logcdf` / `ncx2.logcdf` are not log-stable** — they are
   computed as `log(cdf(x))` and inherit the linear underflow.  The library's

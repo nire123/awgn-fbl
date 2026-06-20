@@ -2,7 +2,7 @@
 
 Numerical evaluation of converse and achievability bounds on the maximum coding rate of the real-valued AWGN channel at finite blocklength `n`.
 
-This repository accompanies the PhD thesis of **Nir Elkayam** and provides clean, tested implementations of the principal information-theoretic bounds for the AWGN channel — including a novel **RCU+ achievable bound** that is significantly tighter than existing alternatives, and a numerically robust log-domain evaluation of **Shannon's 1959 cone-packing converse** (the optimal AWGN converse) that extends the working range far beyond what `scipy.stats.nct` alone can handle.
+This repository accompanies doctoral research on finite-blocklength bounds for the AWGN channel, carried out under the supervision of **Prof. Meir Feder**.  It provides tested implementations of the principal information-theoretic bounds for the channel — an **RCU⁺ achievability bound**, and a log-domain evaluation of **Shannon's 1959 cone-packing converse** that holds well beyond the range where `scipy.stats.nct` returns `NaN`.
 
 A self-contained version of the thesis chapter is included in `docs/chapter/`.
 
@@ -16,14 +16,14 @@ At the reference operating point `n = 200`, `SNR = 0 dB`, `ε = 10⁻³`:
 |---|---|---|
 | Shannon capacity | 0.5000 | — |
 | Shannon cone-packing converse † | 0.3456 | 0.154 |
-| **RCU⁺ achievable (ours)** | **0.3365** | **0.164** |
+| **RCU⁺ achievable** | **0.3365** | **0.164** |
 | Normal approximation | 0.3261 | 0.174 |
 | κβ (Polyanskiy) | 0.2837 | 0.216 |
 | Gallager | 0.2540 | 0.246 |
 
 † The converse is Shannon's 1959 cone-packing bound — the *optimal* AWGN converse, and the PPV meta-converse with the channel-optimal output distribution (Erseghe 2015).  The contribution is its robust log-domain evaluation (`NoncentralTConverse`), not the bound itself.
 
-RCU⁺ comes within **0.009 bits/use** of the converse — about an order of magnitude tighter than alternative achievable bounds.  Because that converse is the strongest possible one, the sandwich is essentially tight.  See **[RESULTS.md](RESULTS.md)** for the full multi-operating-point tables and figures, or `plots/chapter/showcase_waterfall_n500.png` for the flagship picture.
+RCU⁺ comes within **0.009 bits/use** of the converse — about an order of magnitude closer than the other achievability bounds.  Since that converse is the β-optimal one for this ensemble, the two bounds bracket the maximum coding rate tightly.  See **[RESULTS.md](RESULTS.md)** for the full multi-operating-point tables and figures, or `plots/chapter/showcase_waterfall_n500.png` for the headline figure.
 
 ---
 
@@ -94,7 +94,7 @@ rcu  = RCUAchievable(n=200, snr_db=0.0)
 
 R_upper = conv.converse_rate_log(epsilon=1e-3)   # 0.3456 bits/use
 R_lower = rcu.achievable_rate(epsilon=1e-3)      # 0.3365 bits/use
-# Gap ≈ 0.009 bits/use — fundamental limit essentially resolved.
+# Gap ≈ 0.009 bits/use between the upper and lower bounds.
 ```
 
 R → ε direction:
@@ -134,8 +134,8 @@ python generate_chapter_figures.py
 (spherical) AWGN codebook the maximum-likelihood decision regions are circular
 cones around each codeword, and Shannon's 1959 sphere/cone-packing argument
 gives the *optimal* converse — the error probability of the best code is
-exactly a **non-central t** tail.  This is the strongest known converse for the
-AWGN channel; the formal identity between it and the Polyanskiy–Poor–Verdú
+exactly a **non-central t** tail.  It is the β-optimal converse for this
+ensemble; the formal identity between it and the Polyanskiy–Poor–Verdú
 meta-converse (in the minimax/saddle-point sense) is due to Polyanskiy,
 *Saddle point in the minimax converse* (2013).  `NoncentralTConverse` is
 therefore not a new bound: the contribution is a numerically robust
@@ -153,7 +153,7 @@ accurate far past where scipy's linear NCT breaks down.
 
 | Class | Method | Error type |
 |---|---|---|
-| `RCUAchievable` | One-shot meta-converse integral, our flagship bound. Linear and log-safe paths. | average |
+| `RCUAchievable` | One-shot meta-converse integral. Linear and log-safe paths. | average |
 | `KappaBetaAchievable` | Simple reference port of Polyanskiy's κβ | maximal |
 | `KappaBetaAchievablePPV` | Faithful PPV port (upper-tail quantile + log-domain ncx² tail) | maximal |
 | `GallagerAchievable` | Gallager random-coding, two-regime closed form. Linear and log paths. | average |
@@ -179,14 +179,14 @@ scipy NaNs or underflows).  Every pair is cross-validated in the test suite.
 
 | Bound | Implementations | Cross-checked by |
 |---|---|---|
-| **RCU⁺** (ours) | `RCUAchievable` — linear (`achievable_error`) **and** log-safe (`log_achievable_error`, Elkayam `F·J`); `ExactRandomCoding.rcu_union_error` (Monte-Carlo) | `test_rcu_log_domain`, `test_rcu_verification` (integral vs MC) |
+| **RCU⁺** | `RCUAchievable` — linear (`achievable_error`) **and** log-safe (`log_achievable_error`, the `F·J` factorisation); `ExactRandomCoding.rcu_union_error` (Monte-Carlo) | `test_rcu_log_domain`, `test_rcu_verification` (integral vs MC) |
 | **κβ** (Polyanskiy) | `KappaBetaAchievable` (simple) **and** `KappaBetaAchievablePPV` (faithful) | `test_kappabeta_logdomain` (simple vs PPV; series vs scipy) |
 | **Gallager** | `GallagerAchievable` — linear (`achievable_error`) **and** log (`log_achievable_error`) | `test_gallager_logdomain` (log vs linear) |
 | **Exact random coding** | `ExactRandomCoding.exact_error` (Monte-Carlo of the true RC error) | `test_exact_random_coding` |
 
 **Shared primitives**, each with a log-domain form cross-checked against scipy and, where available, a third reference:
 
-| Primitive | scipy / linear | log-domain (ours) | third reference |
+| Primitive | scipy / linear | log-domain | third reference |
 |---|---|---|---|
 | Lemma 1 pairwise error | `pairwise_error_prob` | `log_pairwise_error_prob` | Ahmed trig reduction |
 | Non-central *t* CDF | `scipy.stats.nct` | `log_nct_cdf` (integral rep) | Ahmed incomplete-beta |
@@ -205,7 +205,7 @@ Temme evaluation of the relaxed converse.
 
 ## Showcase
 
-`plots/chapter/showcase_waterfall_n500.png` — the flagship figure: converse / RCU⁺ / normal approximation tracking each other across six SNRs from 0 to 20 dB:
+`plots/chapter/showcase_waterfall_n500.png` — the headline figure: converse / RCU⁺ / normal approximation tracking each other across six SNRs from 0 to 20 dB:
 
 ![showcase](plots/chapter/showcase_waterfall_n500.png)
 
@@ -251,7 +251,7 @@ wall, and a deep-grid RCU⁺ tracks the converse down to `P_e ≈ 10⁻⁴⁵`.
   uses the integral representation `E_X[Φ(x·√(X/df) − nc)]` on a log-uniform
   X-grid and stays accurate where scipy fails — verified to **n = 5000** and
   `ε` far below `10⁻³⁰⁰`, out of the box.
-* **RCU⁺** (achievable) — the Elkayam factorisation `P(R) = F(R) · J(R)` with
+* **RCU⁺** (achievable) — the factorisation `P(R) = F(R) · J(R)` with
   `J ∈ [1, 1/F(R)]` gives `log P(R) = log F(R) + log J(R)`, two well-conditioned
   terms.  Its deep-tail reach is set by the depth of the converse curve `F(R)`
   it integrates: the default grid floors at `ε = 10⁻¹⁰`; construct

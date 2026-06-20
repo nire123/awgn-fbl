@@ -4,10 +4,10 @@ channel, under i.i.d.\\ power-shell input.
 
 Five classes, grouped in this one module for compactness:
 
-* :class:`RCUAchievable` — our flagship bound, the one-shot metaconverse
+* :class:`RCUAchievable` — the RCU⁺ bound, the one-shot metaconverse
   integral `P(log M) = ∫ F(γ)·e^(log M − γ) dγ` that reuses the exact F(R)
   of :class:`~awgn_fbl.converse.NoncentralTConverse`.  Offers a simple
-  linear evaluation and a log-safe path using the Elkayam factorisation
+  linear evaluation and a log-safe path using the `F·J` factorisation
   `P(R) = F(R)·J(R)`.
 
 * :class:`KappaBetaAchievable` — our first-pass port of Polyanskiy's κβ
@@ -151,7 +151,7 @@ class RCUAchievable:
     log-ε grid by :class:`~awgn_fbl.fast_f.FastFREvaluator`.
 
     The class offers a *simple* linear evaluation (``achievable_error``,
-    ``achievable_rate``) and a *log-safe* evaluation via the Elkayam
+    ``achievable_rate``) and a *log-safe* evaluation via the `F·J`
     factorisation `P(R) = F(R) · J(R)` (``log_achievable_error``,
     ``achievable_rate_v2``).  The two agree in their shared regime; the
     log-safe path keeps `log P(R)` well-conditioned far below machine
@@ -258,7 +258,7 @@ class RCUAchievable:
         return optimize.brentq(objective, R_min, R_max, xtol=tol)
 
     # ------------------------------------------------------------------
-    # Log-safe path — Elkayam factorisation  P(R) = F(R) · J(R)
+    # Log-safe path — F·J factorisation  P(R) = F(R) · J(R)
     # ------------------------------------------------------------------
 
     def log_achievable_error(self, R_bits: float,

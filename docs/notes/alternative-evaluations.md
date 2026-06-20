@@ -171,8 +171,8 @@ minimax converse for channel coding*, IEEE TIT 2013.
 
 | Quantity | Default (library) | Cross-check / alternative | Verdict |
 |---|---|---|---|
-| Solid-angle / pairwise error | log-domain Lemma 1 | Ahmed closed-form trig sum | agree to machine ε at small $n$; ours stable at large $n$ |
-| Non-central $t$ CDF | `log_nct_cdf` (integral rep) | Ahmed incomplete-beta recursion | agree in body; ours reaches the deep tail |
+| Solid-angle / pairwise error | log-domain Lemma 1 | Ahmed closed-form trig sum | agree to machine ε at small $n$; the log-domain form stays stable at large $n$ |
+| Non-central $t$ CDF | `log_nct_cdf` (integral rep) | Ahmed incomplete-beta recursion | agree in body; the integral form reaches the deep tail |
 | Relaxed $\chi^2$ converse | `ErsegheConverse` (Temme) | `ChiSquaredConverse` (scipy ncx²) | agree to $10^{-12}$; Temme survives the NaN wall |
 
 See also [kappabeta-log-domain.md](kappabeta-log-domain.md) for the
