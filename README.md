@@ -32,6 +32,7 @@ RCU⁺ comes within **0.009 bits/use** of the converse — about an order of mag
 ```
 GaussianSim/
 ├── README.md                          ← you are here
+├── ARCHITECTURE.md                    ← module map + pipeline diagrams
 ├── RESULTS.md                         ← numerical results + figure index
 ├── LICENSE                            ← MIT
 ├── pyproject.toml                     ← installable package metadata
@@ -63,7 +64,7 @@ GaussianSim/
     ├── notes/                         ← implementation / theory deep-dives
     │   ├── kappabeta-log-domain.md    ← how κβ was made log-domain
     │   └── alternative-evaluations.md ← Ahmed trig sum & Erseghe Temme
-    └── diagrams/                      ← architecture diagrams (mermaid + png)
+    └── diagrams/                      ← older rendered diagrams (see ARCHITECTURE.md)
 ```
 
 ---
@@ -219,6 +220,7 @@ Temme evaluation of the relaxed converse.
 
 | Where | What |
 |---|---|
+| [`ARCHITECTURE.md`](ARCHITECTURE.md) | the module map, what each file computes, and the converse / RCU⁺ pipelines (with mermaid diagrams). |
 | [`docs/chapter/`](docs/chapter/) (`main.pdf`, LaTeX) | the self-contained thesis chapter — full derivations: Lemma 1, the meta-converse and its β-optimal `Q_Y`, the RCU⁺ construction, the small-`n` exact-RC analysis. |
 | [`docs/notes/alternative-evaluations.md`](docs/notes/alternative-evaluations.md) | **Ahmed's** trigonometric reduction (vs the geometric Lemma 1) and **Erseghe's** Temme evaluation of the relaxed converse — theory, equivalence, and breakdown ranges. |
 | [`docs/notes/kappabeta-log-domain.md`](docs/notes/kappabeta-log-domain.md) | how κβ was made log-domain (complementary probabilities + the saddle-point Poisson-mixture χ² CDF), and how the same idea unifies every bound. |
