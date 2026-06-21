@@ -67,17 +67,35 @@ signs**; in float64 their partial sums cancel catastrophically, so the result
 loses all precision by $n\approx200$ and goes negative by $n\approx400$.  Our
 log-domain Lemma 1 has no such cancellation and stays exact to arbitrary $n$.
 
-A fairness note: this is a limitation of *that closed form taken literally*, not
-of Ahmed's overall method.  Their paper claims (and demonstrates, e.g.
-DVB-S2 with $n\approx65{,}000$) exact evaluation at large $n$, and that
-robustness rests on the **incomplete-beta** algorithm of §1.4 below — the
-solid-angle/geometry term is itself a regularised incomplete beta, so that
-same machinery evaluates it without cancellation.  The eqs 6–7 trig sum is a
-secondary closed form, and the paper does not analyse its float stability.
-**Conclusion:** Ahmed's reduction is a useful independent check of the *same*
-geometric quantity at moderate $n$; pushed to large $n$ in float64 it confirms
-that the integral form (our log-domain Lemma 1, or equivalently the incomplete
-beta) is the stable way to evaluate it.
+This matters for Ahmed's method, and is worth stating precisely because it is
+easy to get wrong.  Ahmed's pipeline has **two halves**:
+
+* **the geometry** — finding the cone angle $\theta_1$ from the rate, via the
+  trig reduction (eqs 6–7).  The paper is explicit: *"These expressions can be
+  used to evaluate the angle $\theta_1$ given an $(n,k)$ code"* (§II.B).  There
+  is **no log-domain treatment of this step** in the paper.
+* **the error probability** $Q(\theta_1)$ — the non-central $t$ CDF, evaluated
+  by the log-domain incomplete-beta recursion of §1.4 below (their Table 1,
+  titled *"Logarithmic Version of Algorithm to Compute (9)"*, and eq 9 is
+  $Q(\theta)$).
+
+So the robustness Ahmed advertise — "exact for $k$ of thousands", demonstrated
+on DVB-S2 with $n\approx65{,}000$ — is carried entirely by the **incomplete-beta
+CDF** (the second half).  The **geometric step is the trig sum**, a *signed*
+closed form with no log treatment, and it is exactly the part that cancels at
+large $n$: to make the integral equal a tiny $2^{-k}$ target, its leading
+$O(\theta_1)$ term must cancel down to $O(\theta_1^{\,n-1})$, losing
+$\sim (n-1)\log(1/\theta_1)$ digits.  The paper does not analyse this, and as
+written eqs 6–7 would not survive $n\approx65{,}000$ — so their implementation
+must do something the paper does not state (extended precision, or computing
+$\theta_1$ through the $\delta=0$ incomplete beta instead, since the
+solid-angle fraction is the central-$t$ CDF).
+
+**Conclusion:** the log-domain robustness Ahmed claim applies to the *CDF* half;
+the *geometric* half, as described, is the trig sum, and our cross-check
+confirms it is the unstable piece.  The integral form (our log-domain Lemma 1,
+or equivalently the central incomplete beta) is the stable way to evaluate the
+same geometric quantity.
 
 ### 1.4 Ahmed's log-domain non-central $t$ CDF
 
