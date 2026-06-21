@@ -1,6 +1,6 @@
 # Test suite
 
-`pytest tests/ -q` — **261 cases** (133 test functions, expanded by
+`pytest tests/ -q` — **262 cases** (134 test functions, expanded by
 parametrisation), ~6 minutes.
 
 The suite is built around one idea: most quantities have **two or more
@@ -33,7 +33,7 @@ Five recurring kinds of check:
 | `test_converse_log_domain.py` | 10 | `converse_rate_log` / `converse_error_log` **vs the linear path** in the shared regime; log path finite where linear scipy NCT NaNs; round-trip; monotonicity in `ε`/`n`; deep-tail error; RCU⁺ extended range; converse–achievability gap shrinks with `n`. |
 | `test_erseghe.py` | 8 | `ErsegheConverse` **integral vs scipy `ncx2`** (~10⁻¹²); finite past scipy's NaN wall; strictly **looser than NCT** (the relaxation); round-trip; two-term asymptotic vs integral; monotonicity; validation. |
 | `test_log_domain.py` | 7 | log-domain **Lemma 1 vs linear** + tail extension; `log_nct_cdf` vs scipy near the mode; **central-`t` cross-check** (`nc=0`); NCT tail finite where scipy returns NaN; SF/CDF complement; monotonicity. |
-| `test_ahmed.py` | 22 | **Ahmed (2007) vs the library**: the closed-form trigonometric reduction == Lemma 1 at small `n` (and its large-`n` cancellation breakdown); Ahmed's incomplete-beta log-NCT == scipy and `log_nct_cdf` in the body. |
+| `test_ahmed.py` | 23 | **Ahmed (2007) vs the library**: the closed-form trigonometric reduction == Lemma 1 at small `n` (and its large-`n` cancellation breakdown); Ahmed's incomplete-beta log-NCT == scipy and `log_nct_cdf` in the body, **and our `log_nct_cdf` reaches deeper into the tail** than Ahmed's linear `1−(·)` recovery (which floors ~1e-12). |
 
 ## Achievability
 

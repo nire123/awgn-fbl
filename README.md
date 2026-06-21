@@ -48,7 +48,7 @@ GaussianSim/
 │   ├── fast_f.py                      ← FastFREvaluator (precomputed F(R))
 │   └── plot.py                        ← plot() + curve registry
 │
-├── tests/                             ← 261 tests, all passing
+├── tests/                             ← 262 tests, all passing
 ├── analysis/                          ← stress tests + sanity checks (diagnostic)
 │
 ├── plots/
@@ -225,7 +225,7 @@ Temme evaluation of the relaxed converse.
 | [`docs/notes/alternative-evaluations.md`](docs/notes/alternative-evaluations.md) | **Ahmed's** trigonometric reduction (vs the geometric Lemma 1) and **Erseghe's** Temme evaluation of the relaxed converse — theory, equivalence, and breakdown ranges. |
 | [`docs/notes/kappabeta-log-domain.md`](docs/notes/kappabeta-log-domain.md) | how κβ was made log-domain (complementary probabilities + the saddle-point Poisson-mixture χ² CDF), and how the same idea unifies every bound. |
 | [`RESULTS.md`](RESULTS.md) | numerical results, tables, and every figure with interpretation. |
-| [`tests/README.md`](tests/README.md) | what each of the 261 tests checks. |
+| [`tests/README.md`](tests/README.md) | what each of the 262 tests checks. |
 
 ---
 
@@ -235,7 +235,7 @@ Temme evaluation of the relaxed converse.
 pytest tests/ -q
 ```
 
-261 tests; a per-file breakdown is in [`tests/README.md`](tests/README.md).  Covering:
+262 tests; a per-file breakdown is in [`tests/README.md`](tests/README.md).  Covering:
 
 * **Implementation cross-validation** (the "two implementations" table above): NCT log-domain vs linear; `ErsegheConverse` vs scipy ncx²; RCU⁺ log vs linear and vs Monte-Carlo union; κβ simple vs PPV-faithful and `_log_ncx2_cdf_series` vs scipy ncx²; Gallager log vs linear; solid-angle vs NCT (rel. error below 10⁻¹⁰).
 * **Published reference points**: Gallager `n=3000, ε=10⁻⁶ → log M = 1225`; κβ_PPV β formula matches `betaq_up_v2.m`.
