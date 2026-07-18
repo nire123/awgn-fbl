@@ -26,8 +26,54 @@ Shannon capacity,0.001,9,4812,1.5804
 Shannon capacity,0.001,9,5000,1.5804
 NCT converse (ours),0.001,9,500,1.45522
 NCT converse (ours),0.001,9,688,1.47216
-RCU+ achievable (ours),0.001,9,500,1.45199
-RCU+ achievable (ours),0.001,9,688,1.46986
+NCT converse (ours),0.001,9,875,1.4835
+NCT converse (ours),0.001,9,1062,1.49183
+NCT converse (ours),0.001,9,1250,1.49831
+NCT converse (ours),0.001,9,1438,1.50352
+NCT converse (ours),0.001,9,1625,1.50782
+NCT converse (ours),0.001,9,1812,1.51145
+NCT converse (ours),0.001,9,2000,1.5146
+NCT converse (ours),0.001,9,2188,1.51734
+NCT converse (ours),0.001,9,2375,1.51975
+NCT converse (ours),0.001,9,2562,1.5219
+NCT converse (ours),0.001,9,2750,1.52384
+NCT converse (ours),0.001,9,2938,1.52559
+NCT converse (ours),0.001,9,3125,1.52718
+NCT converse (ours),0.001,9,3312,1.52864
+NCT converse (ours),0.001,9,3500,1.52999
+NCT converse (ours),0.001,9,3688,1.53124
+NCT converse (ours),0.001,9,3875,1.53239
+NCT converse (ours),0.001,9,4062,1.53347
+NCT converse (ours),0.001,9,4250,1.53448
+NCT converse (ours),0.001,9,4438,1.53542
+NCT converse (ours),0.001,9,4625,1.53631
+NCT converse (ours),0.001,9,4812,1.53714
+NCT converse (ours),0.001,9,5000,1.53793
+RCU$^+$ achievable (ours),0.001,9,500,1.45199
+RCU$^+$ achievable (ours),0.001,9,688,1.46985
+RCU$^+$ achievable (ours),0.001,9,875,1.48171
+RCU$^+$ achievable (ours),0.001,9,1062,1.49036
+RCU$^+$ achievable (ours),0.001,9,1250,1.49707
+RCU$^+$ achievable (ours),0.001,9,1438,1.50246
+RCU$^+$ achievable (ours),0.001,9,1625,1.50688
+RCU$^+$ achievable (ours),0.001,9,1812,1.51061
+RCU$^+$ achievable (ours),0.001,9,2000,1.51384
+RCU$^+$ achievable (ours),0.001,9,2188,1.51665
+RCU$^+$ achievable (ours),0.001,9,2375,1.51911
+RCU$^+$ achievable (ours),0.001,9,2562,1.52131
+RCU$^+$ achievable (ours),0.001,9,2750,1.52329
+RCU$^+$ achievable (ours),0.001,9,2938,1.52508
+RCU$^+$ achievable (ours),0.001,9,3125,1.5267
+RCU$^+$ achievable (ours),0.001,9,3312,1.52819
+RCU$^+$ achievable (ours),0.001,9,3500,1.52956
+RCU$^+$ achievable (ours),0.001,9,3688,1.53083
+RCU$^+$ achievable (ours),0.001,9,3875,1.53201
+RCU$^+$ achievable (ours),0.001,9,4062,1.5331
+RCU$^+$ achievable (ours),0.001,9,4250,1.53412
+RCU$^+$ achievable (ours),0.001,9,4438,1.53509
+RCU$^+$ achievable (ours),0.001,9,4625,1.53598
+RCU$^+$ achievable (ours),0.001,9,4812,1.53683
+RCU$^+$ achievable (ours),0.001,9,5000,1.53763
 Normal approximation,0.001,9,500,1.44927
 Normal approximation,0.001,9,688,1.46782
 Normal approximation,0.001,9,875,1.48008

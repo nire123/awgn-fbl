@@ -1,24 +1,64 @@
 curve,n,rate_bits,epsilon,snr_db
-Gallager achievable (avg err),500,0.4,1e-08,1.66428
-Gallager achievable (avg err),500,0.4,2.48163e-08,1.61053
-Gallager achievable (avg err),500,0.4,6.15848e-08,1.55531
-Gallager achievable (avg err),500,0.4,1.52831e-07,1.49883
-Gallager achievable (avg err),500,0.4,3.79269e-07,1.44048
-Gallager achievable (avg err),500,0.4,9.41205e-07,1.37945
-Gallager achievable (avg err),500,0.4,2.33572e-06,1.31669
-Gallager achievable (avg err),500,0.4,5.79639e-06,1.25161
-Gallager achievable (avg err),500,0.4,1.43845e-05,1.18425
-Gallager achievable (avg err),500,0.4,3.5697e-05,1.11358
-Gallager achievable (avg err),500,0.4,8.85867e-05,1.04024
-Gallager achievable (avg err),500,0.4,0.000219839,0.962409
-Gallager achievable (avg err),500,0.4,0.000545559,0.880919
-Gallager achievable (avg err),500,0.4,0.00135388,0.795101
-Gallager achievable (avg err),500,0.4,0.00335982,0.703179
-Gallager achievable (avg err),500,0.4,0.00833782,0.605329
-Gallager achievable (avg err),500,0.4,0.0206914,0.499001
-Gallager achievable (avg err),500,0.4,0.0513483,0.383403
-Gallager achievable (avg err),500,0.4,0.127427,0.254597
-Gallager achievable (avg err),500,0.4,0.316228,0.108537
+NCT converse (ours),500,0.4,1e-08,1.13684
+NCT converse (ours),500,0.4,2.48163e-08,1.07281
+NCT converse (ours),500,0.4,6.15848e-08,1.00647
+NCT converse (ours),500,0.4,1.52831e-07,0.937633
+NCT converse (ours),500,0.4,3.79269e-07,0.86604
+NCT converse (ours),500,0.4,9.41205e-07,0.79141
+NCT converse (ours),500,0.4,2.33572e-06,0.713406
+NCT converse (ours),500,0.4,5.79639e-06,0.631627
+NCT converse (ours),500,0.4,1.43845e-05,0.545589
+NCT converse (ours),500,0.4,3.5697e-05,0.454698
+NCT converse (ours),500,0.4,8.85867e-05,0.358215
+NCT converse (ours),500,0.4,0.000219839,0.255198
+NCT converse (ours),500,0.4,0.000545559,0.144424
+NCT converse (ours),500,0.4,0.00135388,0.0242464
+NCT converse (ours),500,0.4,0.00335982,-0.107632
+NCT converse (ours),500,0.4,0.00833782,-0.254564
+NCT converse (ours),500,0.4,0.0206914,-0.42201
+NCT converse (ours),500,0.4,0.0513483,-0.6182
+NCT converse (ours),500,0.4,0.127427,-0.861994
+NCT converse (ours),500,0.4,0.316228,-1.19909
+RCU$^+$ achievable (ours),500,0.4,1e-08,1.18184
+RCU$^+$ achievable (ours),500,0.4,2.48163e-08,1.1175
+RCU$^+$ achievable (ours),500,0.4,6.15848e-08,1.05087
+RCU$^+$ achievable (ours),500,0.4,1.52831e-07,0.981749
+RCU$^+$ achievable (ours),500,0.4,3.79269e-07,0.909882
+RCU$^+$ achievable (ours),500,0.4,9.41205e-07,0.834985
+RCU$^+$ achievable (ours),500,0.4,2.33572e-06,0.756721
+RCU$^+$ achievable (ours),500,0.4,5.79639e-06,0.674692
+RCU$^+$ achievable (ours),500,0.4,1.43845e-05,0.588412
+RCU$^+$ achievable (ours),500,0.4,3.5697e-05,0.497289
+RCU$^+$ achievable (ours),500,0.4,8.85867e-05,0.400583
+RCU$^+$ achievable (ours),500,0.4,0.000219839,0.297354
+RCU$^+$ achievable (ours),500,0.4,0.000545559,0.186378
+RCU$^+$ achievable (ours),500,0.4,0.00135388,0.0660119
+RCU$^+$ achievable (ours),500,0.4,0.00335982,-0.066039
+RCU$^+$ achievable (ours),500,0.4,0.00833782,-0.213142
+RCU$^+$ achievable (ours),500,0.4,0.0206914,-0.38073
+RCU$^+$ achievable (ours),500,0.4,0.0513483,-0.577017
+RCU$^+$ achievable (ours),500,0.4,0.127427,-0.820868
+RCU$^+$ achievable (ours),500,0.4,0.316228,-1.15793
+Gallager achievable,500,0.4,1e-08,1.66428
+Gallager achievable,500,0.4,2.48163e-08,1.61053
+Gallager achievable,500,0.4,6.15848e-08,1.55531
+Gallager achievable,500,0.4,1.52831e-07,1.49883
+Gallager achievable,500,0.4,3.79269e-07,1.44048
+Gallager achievable,500,0.4,9.41205e-07,1.37945
+Gallager achievable,500,0.4,2.33572e-06,1.31669
+Gallager achievable,500,0.4,5.79639e-06,1.25161
+Gallager achievable,500,0.4,1.43845e-05,1.18425
+Gallager achievable,500,0.4,3.5697e-05,1.11358
+Gallager achievable,500,0.4,8.85867e-05,1.04024
+Gallager achievable,500,0.4,0.000219839,0.962409
+Gallager achievable,500,0.4,0.000545559,0.880919
+Gallager achievable,500,0.4,0.00135388,0.795101
+Gallager achievable,500,0.4,0.00335982,0.703179
+Gallager achievable,500,0.4,0.00833782,0.605329
+Gallager achievable,500,0.4,0.0206914,0.499001
+Gallager achievable,500,0.4,0.0513483,0.383403
+Gallager achievable,500,0.4,0.127427,0.254597
+Gallager achievable,500,0.4,0.316228,0.108537
 Normal approximation,500,0.4,1e-08,1.37519
 Normal approximation,500,0.4,2.48163e-08,1.30127
 Normal approximation,500,0.4,6.15848e-08,1.22491
